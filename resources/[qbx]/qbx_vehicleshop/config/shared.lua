@@ -25,7 +25,7 @@ return {
 
         models = {
 
-            m3g80 = 'pdm'
+            m3g80 = 'luxury',
             -- zentorno = { 'pdm', 'luxury' },
 
             oppressor = 'luxury',

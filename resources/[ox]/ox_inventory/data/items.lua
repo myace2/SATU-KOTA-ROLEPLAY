@@ -121,25 +121,12 @@ return {
         weight = 160,
     },
 
-    ['phone'] = {
-        label = 'Phone',
-        weight = 190,
-        stack = false,
-        consume = 0,
-        client = {
-            add = function(total)
-                if total > 0 then
-                    pcall(function() return exports.npwd:setPhoneDisabled(false) end)
-                end
-            end,
-
-            remove = function(total)
-                if total < 1 then
-                    pcall(function() return exports.npwd:setPhoneDisabled(true) end)
-                end
-            end
-        }
-    },
+['phone'] = {
+    label = 'Phone',
+    weight = 190,
+    stack = false,
+    consume = 0,
+},  
 
     ['mustard'] = {
         label = 'Mustard',

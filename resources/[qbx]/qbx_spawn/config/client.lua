@@ -1,16 +1,20 @@
 return {
     spawns = {
         {
-            label = 'Legion Square',
-            coords = vec4(195.17, -933.77, 29.7, 144.5)
+            label = 'Bandara',
+            coords = vec4(-1038.04, -2738.23, 19.17, 328.12)
         },
         {
-            label = 'Paleto Bay',
-            coords = vec4(80.35, 6424.12, 31.67, 45.5),
+            label = 'Pelabuhan',
+            coords = vec4(-816.03, -1346.11, 4.15, 46.04),
         },
         {
-            label = 'Motels',
-            coords = vec4(327.56, -205.08, 53.08, 163.5),
+            label = 'Paleto',
+            coords = vec4(-701.98, 5805.22, 16.3, 61.28),
+        },
+        {
+            label = 'Sandy Sours',
+            coords = vec4(1107.99, 2643.18, 37.14, 310.29),
         },
     }
 }
