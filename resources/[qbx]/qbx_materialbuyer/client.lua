@@ -1,4 +1,5 @@
 local config = require 'config'
+local buyerPed
 
 local function openSellMenu()
     local inventory = exports.ox_inventory:GetPlayerItems()
@@ -51,20 +52,33 @@ local function openSellMenu()
 end
 
 CreateThread(function()
-    exports.ox_target:addBoxZone({
-        name = 'qbx_materialbuyer',
-        coords = config.location.coords,
-        size = config.location.size,
-        rotation = config.location.rotation,
-        debug = config.location.debug,
-        options = {
-            {
-                name = 'qbx_materialbuyer_sell',
-                icon = 'fa-solid fa-recycle',
-                label = 'Jual Material',
-                distance = config.location.distance,
-                onSelect = openSellMenu,
-            }
+    local model = joaat(config.location.pedModel)
+    lib.requestModel(model)
+
+    buyerPed = CreatePed(
+        0,
+        model,
+        config.location.coords.x,
+        config.location.coords.y,
+        config.location.coords.z - 1.0,
+        config.location.heading,
+        false,
+        true
+    )
+
+    SetEntityAsMissionEntity(buyerPed, true, true)
+    SetEntityInvincible(buyerPed, true)
+    FreezeEntityPosition(buyerPed, true)
+    SetBlockingOfNonTemporaryEvents(buyerPed, true)
+    SetModelAsNoLongerNeeded(model)
+
+    exports.ox_target:addLocalEntity(buyerPed, {
+        {
+            name = 'qbx_materialbuyer_sell',
+            icon = 'fa-solid fa-recycle',
+            label = 'Jual Material',
+            distance = 2.0,
+            onSelect = openSellMenu,
         }
     })
 
@@ -78,5 +92,13 @@ CreateThread(function()
         BeginTextCommandSetBlipName('STRING')
         AddTextComponentString(config.blip.label)
         EndTextCommandSetBlipName(blip)
+    end
+end)
+
+AddEventHandler('onResourceStop', function(resource)
+    if resource ~= GetCurrentResourceName() then return end
+    if buyerPed and DoesEntityExist(buyerPed) then
+        exports.ox_target:removeLocalEntity(buyerPed, 'qbx_materialbuyer_sell')
+        DeleteEntity(buyerPed)
     end
 end)
