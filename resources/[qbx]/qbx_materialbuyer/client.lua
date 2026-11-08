@@ -165,3 +165,71 @@ RegisterNetEvent('qbx_materialbuyer:client:showHistory', function(rows)
 
     lib.showContext('qbx_materialbuyer_history')
 end)
+
+
+RegisterNetEvent('qbx_materialbuyer:client:showDashboard', function(data)
+    local options = {
+        {
+            title = 'Ringkasan Pembelian Hari Ini',
+            description = ('Transaksi: %s | Material dibeli: %s item | Total pembayaran: $%s'):format(
+                data.stats.transaction_count or 0,
+                data.stats.total_items or 0,
+                data.stats.total_spent or 0
+            ),
+            icon = 'chart-line',
+            readOnly = true,
+        },
+        {
+            title = 'Stok Government',
+            description = 'Jumlah stok saat ini dibandingkan batas 10.000 item per material.',
+            icon = 'warehouse',
+            readOnly = true,
+        },
+    }
+
+    for i = 1, #(data.stock or {}) do
+        local item = data.stock[i]
+        local full = item.remaining <= 0
+        options[#options + 1] = {
+            title = ('%s — %s/10.000'):format(item.label, item.count),
+            description = full
+                and 'STATUS: PENUH | Penjualan material ini ditolak.'
+                or ('Sisa kapasitas: %s | Harga beli: $%s/unit'):format(item.remaining, item.unitPrice),
+            icon = full and 'ban' or 'boxes-stacked',
+            readOnly = true,
+        }
+    end
+
+    options[#options + 1] = {
+        title = 'Pembelian Hari Ini per Material',
+        description = 'Rincian jumlah material yang dibeli Government hari ini.',
+        icon = 'list',
+        readOnly = true,
+    }
+
+    if #(data.byMaterial or {}) == 0 then
+        options[#options + 1] = {
+            title = 'Belum ada pembelian hari ini',
+            description = 'Belum ada transaksi Material Buyer pada hari ini.',
+            icon = 'receipt',
+            disabled = true,
+        }
+    else
+        for i = 1, #data.byMaterial do
+            local row = data.byMaterial[i]
+            options[#options + 1] = {
+                title = row.item_label,
+                description = ('Dibeli: %s item | Total dibayarkan: $%s'):format(row.amount, row.total_price),
+                icon = 'receipt',
+                readOnly = true,
+            }
+        end
+    end
+
+    lib.registerContext({
+        id = 'qbx_materialbuyer_dashboard',
+        title = 'Government Material Dashboard',
+        options = options,
+    })
+    lib.showContext('qbx_materialbuyer_dashboard')
+end)
