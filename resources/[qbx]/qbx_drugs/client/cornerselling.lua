@@ -98,15 +98,18 @@ local function sellToPed(ped)
         end
     end
 
-    local successChance = math.random(1, 100)
-    local getRobbed = math.random(1, 100)
-    if successChance <= config.successChance then hasTarget = false return end
-
     currentOfferDrug = lib.callback.await('qb-drugs:server:getDrugOffer', false)
 
     if currentOfferDrug == nil then
         hasTarget = false
         exports.qbx_core:Notify(locale('error.no_drugs_left'), 'error')
+        return
+    end
+
+    if currentOfferDrug.response == 'decline' then
+        exports.qbx_core:Notify(('NPC menolak tawaran di %s.'):format(currentOfferDrug.zone or 'wilayah ini'), 'error')
+        hasTarget = false
+        lastPed[#lastPed + 1] = ped
         return
     end
 
@@ -116,12 +119,12 @@ local function sellToPed(ped)
     local coords = GetEntityCoords(cache.ped, true)
     local pedCoords = GetEntityCoords(ped)
     local pedDist = #(coords - pedCoords)
-    TaskGoStraightToCoord(ped, coords.x, coords.y, coords.z, getRobbed <= config.robberyChance and 15.0 or 1.2, -1, 0.0, 0.0)
+    TaskGoStraightToCoord(ped, coords.x, coords.y, coords.z, currentOfferDrug.response == 'rob' and 15.0 or 1.2, -1, 0.0, 0.0)
 
     while pedDist > 1.5 do
         coords = GetEntityCoords(cache.ped, true)
         pedCoords = GetEntityCoords(ped)
-        TaskGoStraightToCoord(ped, coords.x, coords.y, coords.z, getRobbed <= config.robberyChance and 15.0 or 1.2, -1, 0.0, 0.0)
+        TaskGoStraightToCoord(ped, coords.x, coords.y, coords.z, currentOfferDrug.response == 'rob' and 15.0 or 1.2, -1, 0.0, 0.0)
         pedDist = #(coords - pedCoords)
         Wait(100)
     end
@@ -135,7 +138,7 @@ local function sellToPed(ped)
             local coords2 = GetEntityCoords(cache.ped, true)
             local pedCoords2 = GetEntityCoords(ped)
             local pedDist2 = #(coords2 - pedCoords2)
-            if getRobbed <= config.robberyChance then
+            if currentOfferDrug.response == 'rob' then
                 TriggerServerEvent('qb-drugs:server:robCornerDrugs')
                 exports.qbx_core:Notify(locale('info.has_been_robbed', currentOfferDrug.amount, currentOfferDrug.chosen.label))
                 stealingPed = ped
