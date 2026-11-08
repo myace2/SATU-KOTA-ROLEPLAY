@@ -3,17 +3,6 @@ local cornerOffers = {}
 local stolenItems = {}
 local cornerLocks = {}
 
-local function isBadsiteMember(source)
-    local player = exports.qbx_core:GetPlayer(source)
-    return player
-        and player.PlayerData.gang
-        and player.PlayerData.gang.name == 'badsite'
-end
-
-local function denyNonBadsite(source)
-    exports.qbx_core:Notify(source, 'Hanya anggota gang Badsite yang dapat melakukan corner selling.', 'error')
-end
-
 local function getAvailableDrugs(source)
     local availableDrugs = {}
     local player = exports.qbx_core:GetPlayer(source)
@@ -35,12 +24,6 @@ local function getAvailableDrugs(source)
 end
 
 lib.callback.register('qb-drugs:server:getDrugOffer', function(source)
-    if not isBadsiteMember(source) then
-        cornerOffers[source] = nil
-        denyNonBadsite(source)
-        return nil
-    end
-
     local player = exports.qbx_core:GetPlayer(source)
     if not player then return nil end
     local availableDrugs = getAvailableDrugs(player.PlayerData.source)
@@ -64,12 +47,6 @@ end)
 
 RegisterNetEvent('qb-drugs:server:giveStealItems', function()
     local src = source
-    if not isBadsiteMember(src) then
-        stolenItems[src] = nil
-        denyNonBadsite(src)
-        return
-    end
-
     local stolen = stolenItems[src]
     stolenItems[src] = nil
     if not stolen or stolen.expiresAt < os.time() then return end
@@ -79,11 +56,6 @@ end)
 
 RegisterNetEvent('qb-drugs:server:sellCornerDrugs', function()
     local src = source
-    if not isBadsiteMember(src) then
-        cornerOffers[src] = nil
-        denyNonBadsite(src)
-        return
-    end
     if cornerLocks[src] then return end
     cornerLocks[src] = true
 
@@ -111,11 +83,6 @@ end)
 
 RegisterNetEvent('qb-drugs:server:robCornerDrugs', function()
     local src = source
-    if not isBadsiteMember(src) then
-        cornerOffers[src] = nil
-        denyNonBadsite(src)
-        return
-    end
     if cornerLocks[src] then return end
     cornerLocks[src] = true
 
