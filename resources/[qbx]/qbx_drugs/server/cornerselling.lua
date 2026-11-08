@@ -81,13 +81,6 @@ lib.callback.register('qb-drugs:server:getDrugOffer', function(source)
 
     local settings = config.cornerSelling
     local zone = getCornerZone(source)
-    local responseRoll = math.random(1, 100)
-    if responseRoll > settings.npcResponse.offerChance + settings.npcResponse.declineChance then
-        return { response = 'rob', zone = zone.name }
-    elseif responseRoll > settings.npcResponse.offerChance then
-        return { response = 'decline', zone = zone.name }
-    end
-
     local randomDrug = math.random(1, #availableDrugs)
     local chosenDrug = availableDrugs[randomDrug]
     local maxAmount = math.max(1, math.floor(math.min(15, chosenDrug.amount) * (zone.demandMultiplier or 1.0)))
@@ -97,10 +90,25 @@ lib.callback.register('qb-drugs:server:getDrugOffer', function(source)
         and math.floor(basePrice * offeredAmount * (zone.priceMultiplier or 1.0))
         or math.floor(math.random(3, 10) * offeredAmount)
 
-    cornerOffers[source] = {
-        item = chosenDrug.item, amount = offeredAmount, total = totalPrice,
-        policeMultiplier = zone.policeMultiplier or 1.0, zone = zone.name, expiresAt = os.time() + 60,
+    local offer = {
+        item = chosenDrug.item,
+        amount = offeredAmount,
+        total = totalPrice,
+        policeMultiplier = zone.policeMultiplier or 1.0,
+        zone = zone.name,
+        expiresAt = os.time() + 60,
     }
+
+    local responseRoll = math.random(1, 100)
+    if responseRoll > settings.npcResponse.offerChance + settings.npcResponse.declineChance then
+        cornerOffers[source] = offer
+        return { response = 'rob', chosen = chosenDrug, idx = randomDrug, amount = offeredAmount, total = totalPrice, zone = zone.name }
+    elseif responseRoll > settings.npcResponse.offerChance then
+        cornerOffers[source] = nil
+        return { response = 'decline', zone = zone.name }
+    end
+
+    cornerOffers[source] = offer
     return { response = 'offer', chosen = chosenDrug, idx = randomDrug, amount = offeredAmount, total = totalPrice, zone = zone.name }
 end)
 
