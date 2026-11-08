@@ -253,7 +253,7 @@ exports.ox_target:addGlobalPed({
         name = 'qbx_drugs_corner_sell',
         icon = 'fas fa-hand-holding-dollar',
         label = 'Tawarkan narkoba',
-        distance = 2.0,
+        distance = 3.0,
         canInteract = function(entity)
             if hasTarget or not DoesEntityExist(entity) then return false end
             if IsPedAPlayer(entity) or IsPedInAnyVehicle(entity, false) or IsPedDeadOrDying(entity, true) then
