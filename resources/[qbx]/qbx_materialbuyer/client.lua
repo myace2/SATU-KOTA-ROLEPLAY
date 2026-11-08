@@ -125,3 +125,43 @@ AddEventHandler('onResourceStop', function(resource)
         DeleteEntity(buyerPed)
     end
 end)
+
+
+RegisterNetEvent('qbx_materialbuyer:client:showHistory', function(rows)
+    local options = {}
+
+    for i = 1, #rows do
+        local row = rows[i]
+        options[#options + 1] = {
+            title = ('#%s | %s'):format(row.id, row.item_label),
+            description = ('Player: %s (ID %s) | Jumlah: %s | Harga/unit: $%s | Total: $%s | Waktu: %s | Citizen ID: %s'):format(
+                row.player_name,
+                row.player_id,
+                row.amount,
+                row.unit_price,
+                row.total_price,
+                row.created_at,
+                row.citizenid
+            ),
+            icon = 'receipt',
+            readOnly = true,
+        }
+    end
+
+    if #options == 0 then
+        options[1] = {
+            title = 'Belum ada transaksi',
+            description = 'Riwayat transaksi Material Buyer masih kosong.',
+            icon = 'receipt',
+            disabled = true,
+        }
+    end
+
+    lib.registerContext({
+        id = 'qbx_materialbuyer_history',
+        title = 'Riwayat Material Buyer (25 Terbaru)',
+        options = options,
+    })
+
+    lib.showContext('qbx_materialbuyer_history')
+end)
