@@ -13,17 +13,19 @@
         }
     },
     "dragCam": {
+        "orbit": "Kamera drehen",
+        "zoom": "Rein- / Rauszoomen",
         "zoomIn": "Zoom vergrößern",
         "zoomOut": "Zoom verkleinern",
         "toggleDoors": "Türen umschalten",
-        "changeView": "First-Person umschalten"
+        "changeView": "First-Person Ansicht"
     },
     "textUI": {
         "tune":  "Drücke [E] um dein Fahrzeug zu modifizieren"
     },
     "menus": {
         "main": {
-            "title": "Werkstatt",
+            "title": "RM-CUSTOMS",
             "repair": "Reparieren",
             "performance": "Performance",
             "parts": "Optik",

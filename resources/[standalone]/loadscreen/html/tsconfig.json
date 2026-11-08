@@ -3,10 +3,8 @@
   "extends": "../base.tsconfig.json",
   "compilerOptions": {
     "module": "ESNext",
-    "moduleResolution": "Classic",
-
+    "moduleResolution": "Bundler",
     "types": [],
-
     "lib": ["DOM", "ESNext"]
   },
   "include": [".", "../types"]

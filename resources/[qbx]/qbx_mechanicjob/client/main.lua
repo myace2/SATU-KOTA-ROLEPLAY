@@ -65,7 +65,7 @@ local function registerDutyTarget()
     if config.useTarget then
         dutyTargetBoxId = exports.ox_target:addBoxZone({
             coords = coords,
-            size = vec3(2.5, 1.5, 1),
+            size = vec3(2.0, 2.0, 3.0),
             rotation = 338.16,
             debug = config.debugPoly,
             options = {{
@@ -84,7 +84,7 @@ local function registerDutyTarget()
     else
         local zone = lib.zones.box({
             coords = coords,
-            size = vec3(1.5, 2, 2),
+            size = vec3(2.0, 2.0, 3.0),
             rotation = 338.16,
             debug = config.debugPoly,
             inside = function()
@@ -124,8 +124,8 @@ local function registerStashTarget()
     if config.useTarget then
         stashTargetBoxId = exports.ox_target:addBoxZone({
             coords = coords,
-            size = vec3(1.5, 1.0, 2),
-            rotation = 248.41,
+            size = vec3(2.5, 2.0, 3),
+            rotation = 348.41,
             debug = config.debugPoly,
             options = {{
                 label = locale('labels.o_stash'),
@@ -143,8 +143,8 @@ local function registerStashTarget()
     else
         local zone = lib.zones.box({
             coords = coords,
-            size = vec3(1.5, 1.5, 2),
-            rotation = 248.41,
+            size = vec3(2.5, 2.5, 3),
+            rotation = 348.41,
             debug = config.debugPoly,
             inside = function()
                 if QBX.PlayerData.job.onduty and QBX.PlayerData.job.type == 'mechanic' then
@@ -170,16 +170,16 @@ end
 
 local function registerGarageZone()
     local coords = sharedConfig.locations.vehicle
-    local veh = cache.vehicle
 
     lib.zones.box({
         coords = coords.xyz,
         size = vec3(15, 5, 6),
-        rotation = 340.0,
+        rotation = 360.0,
         debug = config.debugPoly,
         inside = function()
             if QBX.PlayerData.job.onduty and QBX.PlayerData.job.type == 'mechanic' then
                 if IsControlJustPressed(0, 38) then
+                    local veh = cache.vehicle
                     if veh then
                         DeleteVehicle(veh)
                         lib.hideTextUI()
@@ -193,8 +193,7 @@ local function registerGarageZone()
         end,
         onEnter = function()
             if QBX.PlayerData.job.onduty and QBX.PlayerData.job.type == 'mechanic' then
-                local inVehicle = cache.vehicle
-                if inVehicle then
+                if cache.vehicle then
                     lib.showTextUI(locale('labels.h_vehicle'), {position = 'left-center'})
                 else
                     lib.showTextUI(locale('labels.g_vehicle'), {position = 'left-center'})

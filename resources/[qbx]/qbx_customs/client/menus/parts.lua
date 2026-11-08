@@ -1,24 +1,25 @@
-local originalMods = {}
-partsLastIndex = 1
 local VehicleClass = require('client.enums.VehicleClass')
-local originalPlateIndex
 local config = require 'config.client'
 local sharedConfig = require 'config.shared'
 
 local function plateIndex()
-    originalPlateIndex = GetVehicleNumberPlateTextIndex(vehicle)
+    local originalPlateIndex = GetVehicleNumberPlateTextIndex(vehicle)
 
     local plateIndexLabels = {}
     for i, v in ipairs(config.plateIndexes) do
         plateIndexLabels[i] = v.label
     end
 
-    local option = {
+    return {
+        type = 'item',
+        icon = 'plate',
         id = 'plate_index',
+        payType = 'cosmetic',
         label = locale('menus.options.plateIndex.title'),
-        description = ('%s%s'):format(config.currency, sharedConfig.prices['cosmetic']),
-        close = true,
+        price = ('%s%s'):format(config.currency, sharedConfig.prices['cosmetic']),
         values = plateIndexLabels,
+        selected = originalPlateIndex + 1,
+        defaultIndex = originalPlateIndex + 1,
         set = function(index)
             SetVehicleNumberPlateTextIndex(vehicle, index - 1)
             return originalPlateIndex == index - 1, locale('menus.options.plateIndex.installed', plateIndexLabels[index])
@@ -26,14 +27,12 @@ local function plateIndex()
         restore = function()
             SetVehicleNumberPlateTextIndex(vehicle, originalPlateIndex)
         end,
-        defaultIndex = originalPlateIndex + 1,
     }
-
-    return option
 end
 
-local function parts()
+local function buildOptions()
     local options = {}
+    local originalMods = {}
 
     for _, mod in ipairs(config.mods) do
         local modCount = GetNumVehicleMods(vehicle, mod.id)
@@ -56,11 +55,14 @@ local function parts()
         originalMods[mod.id] = currentMod
 
         options[#options + 1] = {
+            type = 'item',
+            icon = mod.icon or 'parts',
             id = mod.id,
+            payType = 'cosmetic',
             label = mod.label,
-            description = ('%s%s'):format(config.currency, sharedConfig.prices['cosmetic']),
+            price = ('%s%s'):format(config.currency, sharedConfig.prices['cosmetic']),
             values = modLabels,
-            close = true,
+            selected = currentMod + 2,
             defaultIndex = currentMod + 2,
             set = function(index)
                 SetVehicleMod(vehicle, mod.id, index - 2, false)
@@ -76,11 +78,10 @@ local function parts()
 
     if GetVehicleClass(vehicle) ~= VehicleClass.Cycles then
         options[#options + 1] = {
+            type = 'nav',
+            icon = 'wheels',
             label = locale('menus.parts.wheels'),
-            close = true,
-            args = {
-                menu = 'client.menus.wheels',
-            }
+            submenu = 'client.menus.wheels',
         }
     end
 
@@ -93,60 +94,14 @@ local function parts()
     return options
 end
 
-local menu = {
-    id = 'customs-parts',
-    title = locale('menus.parts.title'),
-    canClose = true,
-    disableInput = false,
-    options = {},
-    position = 'top-left',
-}
-
-local function onSubmit(selected, scrollIndex, args)
-    for _, v in pairs(menu.options) do
-        if not v.args?.menu then v.restore() end
-    end
-
-    local subMenuName = args?.menu
-    if subMenuName then
-        local menuId = require(subMenuName)(args?.menuArgs and table.unpack(args.menuArgs))
-        lib.showMenu(menuId, 1)
-        return
-    end
-
-
-    local duplicate, desc = menu.options[selected].set(scrollIndex)
-
-    local success = InstallMod(duplicate, 'cosmetic', {
-        description = desc,
-    })
-
-    if not success then menu.options[selected].restore() end
-
-    lib.setMenuOptions(menu.id, parts())
-    lib.showMenu(menu.id, partsLastIndex)
-end
-
-menu.onSideScroll = function(selected, scrollIndex)
-    PlaySoundFrontend(-1, 'NAV_UP_DOWN', 'HUD_FRONTEND_DEFAULT_SOUNDSET', true)
-    local option = menu.options[selected]
-    option.set(scrollIndex)
-end
-
-menu.onClose = function()
-    for _, v in pairs(menu.options) do
-        if not v.args?.menu then v.restore() end
-    end
-    lib.showMenu(mainMenuId, mainLastIndex)
-end
-
-menu.onSelected = function(selected)
-    PlaySoundFrontend(-1, 'NAV_UP_DOWN', 'HUD_FRONTEND_DEFAULT_SOUNDSET', true)
-    partsLastIndex = selected
-end
-
 return function()
-    menu.options = parts()
-    lib.registerMenu(menu, onSubmit)
-    return menu.id
+    return {
+        id = 'parts',
+        title = locale('menus.parts.title'),
+        subtitle = 'Body parts, plates and wheels',
+        options = buildOptions(),
+        rebuild = function()
+            return require('client.menus.parts')()
+        end,
+    }
 end

@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 48" fill="none">
+  <defs>
+    <linearGradient id="nsrGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#00E5FF"/>
+      <stop offset="100%" stop-color="#3B82F6"/>
+    </linearGradient>
+  </defs>
+  <polygon points="8,8 30,8 40,40 18,40" fill="url(#nsrGrad)"/>
+  <polygon points="35,8 50,8 42,26 27,26" fill="#F8FAFC" opacity="0.9"/>
+  <text x="58" y="29" fill="#F8FAFC" font-family="Segoe UI, Arial, sans-serif" font-weight="800" font-size="22" letter-spacing="2">NSR</text>
+  <text x="112" y="29" fill="#00E5FF" font-family="Segoe UI, Arial, sans-serif" font-weight="700" font-size="16" letter-spacing="1.5">HUD</text>
+</svg>

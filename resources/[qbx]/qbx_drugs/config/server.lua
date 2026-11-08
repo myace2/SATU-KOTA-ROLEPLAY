@@ -142,7 +142,6 @@ return {
     },
     scamChance = 25,
     policeCallChance = 15,
-    useMarkedBills = false,
     deliveryRepGain = 1,
     deliveryRepLoss = 1,
     policeDeliveryModifier = 2,

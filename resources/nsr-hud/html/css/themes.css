@@ -1,0 +1,94 @@
+/* ============================================================================
+   NSR HUD ULTIMATE — THEMES & DESIGN TOKENS (html/css/themes.css)
+   6 Original Presets: Midnight, Neon, Minimal, Sport, Luxury, Tactical
+   ============================================================================ */
+
+:root {
+    --nsr-font-sans: 'Segoe UI', 'Inter', 'Tahoma', 'Noto Sans Arabic', Arial, sans-serif;
+    --nsr-font-mono: 'Consolas', 'JetBrains Mono', 'Courier New', monospace;
+
+    /* Default Theme Tokens (Midnight) */
+    --nsr-primary: #00E5FF;
+    --nsr-secondary: #3B82F6;
+    --nsr-accent: #38BDF8;
+    --nsr-surface: rgba(11, 15, 25, 0.86);
+    --nsr-surface-elevated: rgba(18, 25, 42, 0.94);
+    --nsr-border: rgba(0, 229, 255, 0.24);
+    --nsr-text: #F8FAFC;
+    --nsr-text-muted: #94A3B8;
+    --nsr-danger: #EF4444;
+    --nsr-warning: #F59E0B;
+    --nsr-success: #10B981;
+    --nsr-radius-sm: 8px;
+    --nsr-radius-md: 12px;
+    --nsr-radius-lg: 18px;
+    --nsr-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+}
+
+body.theme-midnight {
+    --nsr-primary: #00E5FF;
+    --nsr-secondary: #3B82F6;
+    --nsr-accent: #38BDF8;
+    --nsr-surface: rgba(11, 15, 25, 0.86);
+    --nsr-surface-elevated: rgba(17, 24, 39, 0.95);
+    --nsr-border: rgba(0, 229, 255, 0.25);
+}
+
+body.theme-neon {
+    --nsr-primary: #FF2A85;
+    --nsr-secondary: #00FF9D;
+    --nsr-accent: #A855F7;
+    --nsr-surface: rgba(15, 9, 24, 0.88);
+    --nsr-surface-elevated: rgba(24, 14, 38, 0.95);
+    --nsr-border: rgba(255, 42, 133, 0.32);
+}
+
+body.theme-minimal {
+    --nsr-primary: #F8FAFC;
+    --nsr-secondary: #94A3B8;
+    --nsr-accent: #E2E8F0;
+    --nsr-surface: rgba(18, 19, 22, 0.84);
+    --nsr-surface-elevated: rgba(28, 30, 35, 0.95);
+    --nsr-border: rgba(248, 250, 252, 0.18);
+}
+
+body.theme-sport {
+    --nsr-primary: #EF4444;
+    --nsr-secondary: #F59E0B;
+    --nsr-accent: #F97316;
+    --nsr-surface: rgba(17, 17, 19, 0.88);
+    --nsr-surface-elevated: rgba(27, 25, 29, 0.96);
+    --nsr-border: rgba(239, 68, 68, 0.30);
+}
+
+body.theme-luxury {
+    --nsr-primary: #D4AF37;
+    --nsr-secondary: #A67C52;
+    --nsr-accent: #FDE68A;
+    --nsr-surface: rgba(20, 18, 15, 0.88);
+    --nsr-surface-elevated: rgba(31, 27, 22, 0.96);
+    --nsr-border: rgba(212, 175, 55, 0.30);
+}
+
+body.theme-tactical {
+    --nsr-primary: #10B981;
+    --nsr-secondary: #EAB308;
+    --nsr-accent: #34D399;
+    --nsr-surface: rgba(10, 18, 14, 0.88);
+    --nsr-surface-elevated: rgba(16, 28, 22, 0.96);
+    --nsr-border: rgba(16, 185, 129, 0.28);
+}
+
+/* CarPlay Wallpaper Finishes */
+.wallpaper-obsidian {
+    background: radial-gradient(circle at 20% 20%, #162033 0%, #090D16 70%, #05070B 100%);
+}
+.wallpaper-carbon {
+    background: repeating-linear-gradient(45deg, #121418 0px, #121418 6px, #171A20 6px, #171A20 12px);
+}
+.wallpaper-aurora {
+    background: radial-gradient(circle at 80% 15%, rgba(0, 229, 255, 0.18), rgba(59, 130, 246, 0.12) 45%, #090D18 90%);
+}
+.wallpaper-crimson {
+    background: radial-gradient(circle at 75% 20%, rgba(239, 68, 68, 0.22), rgba(20, 14, 18, 0.95) 65%, #090709 100%);
+}

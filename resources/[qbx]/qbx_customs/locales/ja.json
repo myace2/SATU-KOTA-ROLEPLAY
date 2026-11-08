@@ -13,17 +13,19 @@
         }
     },
     "dragCam": {
+        "orbit": "カメラを回転",
+        "zoom": "ズームイン / アウト",
         "zoomIn": "ズームイン",
         "zoomOut": "ズームアウト",
         "toggleDoors": "ドアを開閉",
-        "changeView": "一人称視点を切り替え"
+        "changeView": "一人称視点"
     },
     "textUI": {
         "tune":  "[E] を押して車をチューニング"
     },
     "menus": {
         "main": {
-            "title": "ポップコーンカスタム",
+            "title": "RM-CUSTOMS",
             "repair": "修理",
             "performance": "パフォーマンス",
             "parts": "外装 - パーツ",

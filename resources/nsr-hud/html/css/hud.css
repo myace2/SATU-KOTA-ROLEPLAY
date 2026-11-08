@@ -1,0 +1,209 @@
+/* ============================================================================
+   NSR HUD ULTIMATE — PLAYER HUD WIDGETS (html/css/hud.css)
+   Supports 5 Visual Styles per Widget: ring, bar, pill, hex, minimal
+   ============================================================================ */
+
+.player-hud-layer {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.hud-widget {
+    position: absolute;
+    transform-origin: top left;
+    transition: opacity 0.2s ease;
+    pointer-events: none;
+}
+
+body.editor-active .hud-widget {
+    pointer-events: auto;
+    cursor: grab;
+}
+body.editor-active .hud-widget:active {
+    cursor: grabbing;
+}
+
+/* 1. Radial Ring Style (`style-ring`) */
+.hud-widget.style-ring {
+    width: 52px;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--nsr-surface);
+    border-radius: 50%;
+    box-shadow: var(--nsr-shadow);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.hud-ring-svg {
+    position: absolute;
+    inset: 3px;
+    width: 46px;
+    height: 46px;
+    transform: rotate(-90deg);
+}
+
+.hud-ring-track {
+    fill: none;
+    stroke: rgba(255, 255, 255, 0.10);
+    stroke-width: 3.4;
+}
+
+.hud-ring-fill {
+    fill: none;
+    stroke: var(--widget-color, var(--nsr-primary));
+    stroke-width: 3.4;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 0.22s ease;
+}
+
+.hud-ring-center {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1px;
+}
+
+.hud-widget-icon {
+    width: 16px;
+    height: 16px;
+    background-color: var(--widget-color, var(--nsr-primary));
+    -webkit-mask-size: contain;
+    mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    mask-position: center;
+    flex-shrink: 0;
+}
+
+.hud-widget-val {
+    font-family: var(--nsr-font-mono);
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--nsr-text);
+    line-height: 1;
+}
+
+.hud-widget-lbl {
+    font-size: 9px;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: var(--nsr-text-muted);
+    letter-spacing: 0.4px;
+    max-width: 90px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* 2. Progress Bar Style (`style-bar`) */
+.hud-widget.style-bar {
+    min-width: 118px;
+    padding: 7px 11px;
+    border-radius: var(--nsr-radius-sm);
+    background: var(--nsr-surface);
+    border: 1px solid var(--nsr-border);
+    box-shadow: var(--nsr-shadow);
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.hud-bar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.hud-bar-left {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.hud-bar-track {
+    width: 100%;
+    height: 5px;
+    border-radius: 99px;
+    background: rgba(255, 255, 255, 0.12);
+    overflow: hidden;
+}
+
+.hud-bar-fill {
+    height: 100%;
+    border-radius: 99px;
+    background: var(--widget-color, var(--nsr-primary));
+    transition: width 0.22s ease;
+}
+
+/* 3. Compact Pill Style (`style-pill`) */
+.hud-widget.style-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: var(--nsr-surface);
+    border: 1px solid var(--nsr-border);
+    box-shadow: var(--nsr-shadow);
+    white-space: nowrap;
+}
+
+.hud-widget.style-pill .hud-widget-val {
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.hud-widget.style-pill .hud-widget-lbl {
+    font-size: 10px;
+    max-width: 160px;
+}
+
+/* 4. Tactical Hex Style (`style-hex`) */
+.hud-widget.style-hex {
+    width: 56px;
+    height: 56px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    background: var(--nsr-surface);
+    clip-path: polygon(25% 4%, 75% 4%, 98% 50%, 75% 96%, 25% 96%, 2% 50%);
+    border-bottom: 3px solid var(--widget-color, var(--nsr-primary));
+}
+
+/* 5. Minimal Text Style (`style-minimal`) */
+.hud-widget.style-minimal {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 8px;
+    background: rgba(10, 14, 22, 0.55);
+    border-inline-start: 3px solid var(--widget-color, var(--nsr-primary));
+    border-radius: 4px;
+}
+
+/* Voice Active & Critical States */
+.hud-widget.voice-talking {
+    box-shadow: 0 0 14px var(--widget-color, var(--nsr-primary));
+    border-color: var(--widget-color, var(--nsr-primary));
+}
+
+.hud-widget.critical-pulse {
+    animation: hudCriticalPulse 1.1s infinite ease-in-out;
+}
+
+@keyframes hudCriticalPulse {
+    0%, 100% { transform: scale(var(--widget-scale, 1)); }
+    50%      { transform: scale(calc(var(--widget-scale, 1) * 1.07)); }
+}

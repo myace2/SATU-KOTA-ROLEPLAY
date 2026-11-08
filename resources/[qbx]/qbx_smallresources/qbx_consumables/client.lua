@@ -1,7 +1,20 @@
 local alcoholCount = 0
+local drunkLevel = 0
 local relieveCount = 0
 local healing = false
 local smokingWeed = false
+
+LocalPlayer.state:set('drunk', drunkLevel, false)
+
+CreateThread(function()
+    while true do
+        Wait(60000)
+        if drunkLevel > 0 then
+            drunkLevel = math.max(0, drunkLevel - 5)
+            LocalPlayer.state:set('drunk', drunkLevel, false)
+        end
+    end
+end)
 
 local function healOxy()
     if not healing then
@@ -240,6 +253,9 @@ lib.callback.register('consumables:client:DrinkAlcohol', function(alcoholLevel, 
         }
     }) then -- if completed
         alcoholCount += alcoholLevel or 1
+        local strength = tonumber(alcoholLevel) or 1
+        drunkLevel = math.min(100, drunkLevel + math.max(1, math.floor(strength * 25 + 0.5)))
+        LocalPlayer.state:set('drunk', drunkLevel, false)
         if alcoholCount > 1 and alcoholCount < 4 then
             TriggerEvent('evidence:client:SetStatus', 'alcohol', 200)
         elseif alcoholCount >= 4 then

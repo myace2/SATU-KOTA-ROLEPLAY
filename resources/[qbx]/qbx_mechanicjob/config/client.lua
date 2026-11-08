@@ -12,7 +12,7 @@ return {
         fuel = locale('labels.fuel'),
     },
     vehicles = {
-        flatbed = 'Flatbed',
+        m3g80 = 'bmw',
         towtruck = 'Towtruck',
         minivan = 'Minivan (Rental Car)',
         blista = 'Blista',

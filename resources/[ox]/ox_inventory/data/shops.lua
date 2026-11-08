@@ -107,9 +107,7 @@ return {
 	PoliceArmoury = {
 		name = 'Police Armoury',
 		groups = shared.police,
-		blip = {
-			id = 110, colour = 84, scale = 0.8
-		}, inventory = {
+		inventory = {
 			{ name = 'ammo-9', price = 5, },
 			{ name = 'ammo-rifle', price = 5, },
 			{ name = 'WEAPON_FLASHLIGHT', price = 200 },
@@ -141,18 +139,34 @@ return {
 		}
 	},
 
-	BlackMarketArms = {
-		name = 'Black Market (Arms)',
-		inventory = {
-			{ name = 'WEAPON_DAGGER', price = 5000, metadata = { registered = false	}, currency = 'black_money' },
-			{ name = 'WEAPON_CERAMICPISTOL', price = 50000, metadata = { registered = false }, currency = 'black_money' },
-			{ name = 'at_suppressor_light', price = 50000, currency = 'black_money' },
-			{ name = 'ammo-rifle', price = 1000, currency = 'black_money' },
-			{ name = 'ammo-rifle2', price = 1000, currency = 'black_money' }
+	mechanic_shop = {
+		name = 'Mechanic Shop',
+		groups = {
+			['mechanic'] = 0
+		}, inventory = {
+			{ name = 'cleaningkit', price = 26 },
+			{ name = 'repairkit', price = 5 },
+			{ name = 'advancedrepairkit', price = 5 }
 		}, locations = {
-			vec3(309.09, -913.75, 56.46)
+			vec3(1140.55, -780.27, 56.6)
 		}, targets = {
+			{ loc = vec3(1140.55, -780.27, 57.6), length = 1.0, width = 1.5, heading = 0.0, minZ = 21.8, maxZ = 22.2, distance = 5.0 },
+		}
+	},
 
+	BlackMarketArms = {
+		name = 'Black Market',
+		inventory = {
+			{ name = 'weed_seed', price = 500, currency = 'black_money' },
+			{ name = 'coke_seed', price = 500, currency = 'black_money' },
+			{ name = 'meth_seed', price = 500, currency = 'black_money' },
+			{ name = 'empty_weed_bag', price = 100, currency = 'black_money' },
+			{ name = 'rolling_paper', price = 100, currency = 'black_money' },
+			{ name = 'weed_nutrition', price = 100, currency = 'black_money' }
+		}, locations = {
+			vec3(-269.51, -2437.16, 5.41)
+		}, targets = {
+			{ loc = vec3(-270.11, -2437.00, 6.41), length = 1.0, width = 1.5, heading = 0.0, minZ = 21.8, maxZ = 22.2, distance = 5.0 },
 		}
 	},
 

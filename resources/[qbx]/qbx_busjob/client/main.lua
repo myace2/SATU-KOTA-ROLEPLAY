@@ -56,22 +56,23 @@ local function removeNPCBlip()
 end
 
 local function updateBlip()
-    if table.type(QBX.PlayerData) == 'empty' or (QBX.PlayerData.job.name ~= "bus" and busBlip) then
+    if table.type(QBX.PlayerData) == 'empty' then
         removeBusBlip()
         return
-    elseif (QBX.PlayerData.job.name == "bus" and not busBlip) then
-        local coords = sharedConfig.location
-        busBlip = AddBlipForCoord(coords.x, coords.y, coords.z)
-        SetBlipSprite(busBlip, 513)
-        SetBlipDisplay(busBlip, 4)
-        SetBlipScale(busBlip, 0.6)
-        SetBlipAsShortRange(busBlip, true)
-        SetBlipColour(busBlip, 49)
-        BeginTextCommandSetBlipName("STRING")
-        AddTextComponentSubstringPlayerName(locale('info.bus_depot'))
-        EndTextCommandSetBlipName(busBlip)
-        return
     end
+
+    if busBlip then return end
+
+    local coords = sharedConfig.location
+    busBlip = AddBlipForCoord(coords.x, coords.y, coords.z)
+    SetBlipSprite(busBlip, 513)
+    SetBlipDisplay(busBlip, 4)
+    SetBlipScale(busBlip, 0.6)
+    SetBlipAsShortRange(busBlip, true)
+    SetBlipColour(busBlip, 49)
+    BeginTextCommandSetBlipName("STRING")
+    AddTextComponentSubstringPlayerName(locale('info.bus_depot'))
+    EndTextCommandSetBlipName(busBlip)
 end
 
 local function isPlayerVehicleABus()
@@ -181,7 +182,7 @@ local function updateZone()
         vehicleZone = nil
     end
 
-    if table.type(QBX.PlayerData) == 'empty' or QBX.PlayerData.job.name ~= 'bus' then return end
+    if table.type(QBX.PlayerData) == 'empty' then return end
 
     local inRange = false
     local shownTextUI = false

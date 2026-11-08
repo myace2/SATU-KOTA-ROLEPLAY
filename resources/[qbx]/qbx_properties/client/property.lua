@@ -417,11 +417,13 @@ function PreparePropertyMenu(propertyCoords)
 end
 
 CreateThread(function()
-    for i = 1, #sharedConfig.apartmentOptions do
-        local data = sharedConfig.apartmentOptions[i]
+    if clientConfig.showApartmentBlips then
+        for i = 1, #sharedConfig.apartmentOptions do
+            local data = sharedConfig.apartmentOptions[i]
 
-        if not blips[data.enter] then
-            blips[data.enter] = createBlip(data.enter, data.label)
+            if not blips[data.enter] then
+                blips[data.enter] = createBlip(data.enter, data.label)
+            end
         end
     end
 

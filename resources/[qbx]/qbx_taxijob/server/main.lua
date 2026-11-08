@@ -9,9 +9,7 @@ local lastPayTime = {}
 local function getPlayerWithTaxiJob(src)
     local player = exports.qbx_core:GetPlayer(src)
     if not player then return nil end
-    if player.PlayerData.job.name ~= 'taxi' then
-        return nil
-    end
+
     return player
 end
 

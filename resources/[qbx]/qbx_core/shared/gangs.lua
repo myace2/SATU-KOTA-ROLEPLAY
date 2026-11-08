@@ -9,20 +9,26 @@ return {
             },
         },
     },
-    ['lostmc'] = {
-        label = 'The Lost MC',
+    ['nos'] = {
+        label = 'Noble Outlaws MC',
         grades = {
             [0] = {
-                name = 'Recruit'
+                name = 'Prospect'
             },
             [1] = {
-                name = 'Enforcer'
+                name = 'Member'
             },
             [2] = {
-                name = 'Shot Caller'
+                name = 'Road Captain'
             },
             [3] = {
-                name = 'Boss',
+                name = 'Tresure'
+            },
+            [4] = {
+                name = 'Vice President'
+            },
+            [5] = {
+                name = 'President',
                 isboss = true,
                 bankAuth = true
             },

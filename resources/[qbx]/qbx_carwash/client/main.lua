@@ -35,7 +35,7 @@ end
 
 for i = 1, #config.locations do
     local coords = config.locations[i]
-    createCarWashBlip(coords)
+    if config.useBlips then createCarWashBlip(coords) end
     if config.useTarget then
         exports.ox_target:addSphereZone({
             coords = coords,

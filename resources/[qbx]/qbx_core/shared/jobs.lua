@@ -42,6 +42,36 @@ return {
             },
         },
     },
+    ['goverment'] = {
+        label = 'Government',
+        type = 'government',
+        defaultDuty = true,
+        offDutyPay = false,
+        grades = {
+            [0] = {
+                name = 'Recruit',
+                payment = 50
+            },
+            [1] = {
+                name = 'Staff',
+                payment = 75
+            },
+            [2] = {
+                name = 'Minister',
+                payment = 100
+            },
+            [3] = {
+                name = 'Vice President',
+                payment = 125
+            },
+            [4] = {
+                name = 'President',
+                isboss = true,
+                bankAuth = true,
+                payment = 150
+            },
+        },
+    },
     ['bcso'] = {
         label = 'BCSO',
         type = 'leo',
@@ -228,6 +258,40 @@ return {
                 isboss = true,
                 bankAuth = true,
                 payment = 150
+            },
+        },
+    },
+    ['government'] = {
+        label = 'Government',
+        defaultDuty = true,
+        offDutyPay = false,
+        grades = {
+            [0] = {
+                name = 'Civil Servant',
+                payment = 75
+            },
+            [1] = {
+                name = 'Department Director',
+                isboss = true,
+                bankAuth = true,
+                payment = 125
+            },
+        },
+    },
+    ['sales'] = {
+        label = 'Sales',
+        defaultDuty = true,
+        offDutyPay = false,
+        grades = {
+            [0] = {
+                name = 'Sales Associate',
+                payment = 50
+            },
+            [1] = {
+                name = 'Sales Manager',
+                isboss = true,
+                bankAuth = true,
+                payment = 100
             },
         },
     },

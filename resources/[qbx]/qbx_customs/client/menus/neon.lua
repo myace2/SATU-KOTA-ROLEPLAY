@@ -1,28 +1,34 @@
-local originalNeon = {}
-local lastIndex = 1
-local originalLabelIndex = 1
 local config = require 'config.client'
 local sharedConfig = require 'config.shared'
 
-local function neon()
+local function buildOptions()
     local options = {}
+    local originalNeon = {}
 
     for i = 1, 4 do
         local enabled = IsVehicleNeonLightEnabled(vehicle, i - 1)
         originalNeon[i] = enabled
 
         options[i] = {
+            type = 'item',
+            icon = 'neon',
+            id = ('neon_%d'):format(i),
+            payType = 'colors',
             label = locale('menus.neon.neon', config.neon[i].label, ''),
-            description = ('%s%s'):format(config.currency, sharedConfig.prices['colors']),
+            price = ('%s%s'):format(config.currency, sharedConfig.prices['colors']),
             values = {
                 locale('menus.general.disabled'),
                 locale('menus.general.enabled'),
             },
-            close = true,
+            selected = enabled and 2 or 1,
             defaultIndex = enabled and 2 or 1,
             set = function(index)
                 SetVehicleNeonLightEnabled(vehicle, i - 1, index == 2)
-                return originalNeon[i] == (index == 2), locale('menus.neon.neon', config.neon[i].label, ', ' .. (index == 2 and string.lower(locale('menus.general.enabled')) or string.lower(locale('menus.general.disabled'))))
+                return originalNeon[i] == (index == 2), locale(
+                    'menus.neon.neon',
+                    config.neon[i].label,
+                    ', ' .. (index == 2 and string.lower(locale('menus.general.enabled')) or string.lower(locale('menus.general.disabled')))
+                )
             end,
             restore = function()
                 SetVehicleNeonLightEnabled(vehicle, i - 1, originalNeon[i])
@@ -31,22 +37,26 @@ local function neon()
     end
 
     local r, g, b = GetVehicleNeonLightsColour(vehicle)
-
-    local rgbValues = {}
+    local originalLabelIndex = 1
     local neonLabels = {}
+
     for i, v in ipairs(config.neonColors) do
         neonLabels[i] = v.label
-        rgbValues[i] = {r = v.r, g = v.g, b = v.b}
         if v.r == r and v.g == g and v.b == b then
             originalLabelIndex = i
         end
     end
 
     options[5] = {
+        type = 'item',
+        icon = 'neon',
+        id = 'neon_color',
+        payType = 'colors',
         label = locale('menus.neon.color'),
-        close = true,
+        price = ('%s%s'):format(config.currency, sharedConfig.prices['colors']),
         values = neonLabels,
-        rgbValues = rgbValues,
+        selected = originalLabelIndex,
+        defaultIndex = originalLabelIndex,
         set = function(index)
             local rgb = config.neonColors[index]
             SetVehicleNeonLightsColour(vehicle, rgb.r, rgb.g, rgb.b)
@@ -56,60 +66,19 @@ local function neon()
             local rgb = config.neonColors[originalLabelIndex]
             SetVehicleNeonLightsColour(vehicle, rgb.r, rgb.g, rgb.b)
         end,
-        defaultIndex = originalLabelIndex,
     }
 
     return options
 end
 
-local menu = {
-    id = 'customs-neon',
-    canClose = true,
-    disableInput = false,
-    title = locale('menus.neon.title'),
-    position = 'top-left',
-    options = {},
-}
-
-local function onSubmit(selected, scrollIndex)
-    local option = menu.options[selected]
-
-    for _, v in pairs(menu.options) do
-        v.restore()
-    end
-
-    local duplicate, desc = option.set(scrollIndex)
-
-    local success = InstallMod(duplicate, 'colors', {
-        description = desc,
-    })
-
-    if not success then menu.options[selected].restore() end
-
-    lib.setMenuOptions(menu.id, neon())
-    lib.showMenu(menu.id, lastIndex)
-end
-
-menu.onSideScroll = function(selected, scrollIndex)
-    PlaySoundFrontend(-1, 'NAV_UP_DOWN', 'HUD_FRONTEND_DEFAULT_SOUNDSET', true)
-    local option = menu.options[selected]
-    option.set(scrollIndex)
-end
-
-menu.onSelected = function(selected)
-    PlaySoundFrontend(-1, 'NAV_UP_DOWN', 'HUD_FRONTEND_DEFAULT_SOUNDSET', true)
-    lastIndex = selected
-end
-
-menu.onClose = function()
-    for _, v in pairs(menu.options) do
-        v.restore()
-    end
-    lib.showMenu('customs-colors', ColorsLastIndex)
-end
-
 return function()
-    menu.options = neon()
-    lib.registerMenu(menu, onSubmit)
-    return menu.id
+    return {
+        id = 'neon',
+        title = locale('menus.neon.title'),
+        subtitle = 'Neon lights and colors',
+        options = buildOptions(),
+        rebuild = function()
+            return require('client.menus.neon')()
+        end,
+    }
 end

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NSR HUD Ultimate</title>
+    <link rel="stylesheet" href="css/themes.css" />
+    <link rel="stylesheet" href="css/main.css" />
+    <link rel="stylesheet" href="css/hud.css" />
+    <link rel="stylesheet" href="css/vehicle.css" />
+    <link rel="stylesheet" href="css/carplay.css" />
+    <link rel="stylesheet" href="css/editor.css" />
+</head>
+<body class="theme-midnight" data-theme="midnight">
+
+    <!-- Cinematic Letterbox Bars -->
+    <div id="cinematic-overlay" class="cinematic-overlay hidden" aria-hidden="true">
+        <div class="cinematic-bar cinematic-bar-top"></div>
+        <div class="cinematic-bar cinematic-bar-bottom"></div>
+    </div>
+
+    <!-- Alignment Grid & Snap Guides (Visible inside HUD Editor) -->
+    <div id="editor-grid-overlay" class="editor-grid-overlay hidden" aria-hidden="true">
+        <div id="snap-line-x" class="snap-line snap-line-x hidden"></div>
+        <div id="snap-line-y" class="snap-line snap-line-y hidden"></div>
+    </div>
+
+    <!-- Master HUD Canvas -->
+    <main id="hud-root" class="hud-root">
+        <!-- Player HUD Layer (15 Modular Widgets populated dynamically by player-hud.js) -->
+        <section id="player-hud-layer" class="player-hud-layer" aria-label="Player HUD"></section>
+
+        <!-- Vehicle HUD Cluster Layer (Managed by vehicle-hud.js) -->
+        <section id="vehicle-hud-wrapper" class="vehicle-hud-wrapper hidden" aria-label="Vehicle HUD">
+            <div id="vehicle-hud-cluster" class="vehicle-hud-cluster preset-aggressive"></div>
+        </section>
+    </main>
+
+    <!-- NSR CarPlay In-Vehicle Interactive Tablet -->
+    <aside id="carplay-modal" class="carplay-modal hidden" role="dialog" aria-modal="true">
+        <div id="carplay-bezel" class="carplay-bezel wallpaper-obsidian">
+            <!-- Sidebar Dock -->
+            <nav class="carplay-dock">
+                <div class="carplay-dock-top">
+                    <span id="carplay-clock" class="carplay-dock-clock">12:00</span>
+                    <span id="carplay-role-badge" class="carplay-role-badge" data-i18n="carplay.driver_badge"></span>
+                </div>
+
+                <div class="carplay-dock-nav">
+                    <button type="button" class="carplay-dock-btn active" data-app="home" data-i18n-title="carplay.nav_home">
+                        <span class="dock-icon">⌂</span>
+                        <span class="dock-label" data-i18n="carplay.nav_home"></span>
+                    </button>
+                    <button type="button" class="carplay-dock-btn" data-app="radio" data-i18n-title="carplay.nav_radio">
+                        <span class="dock-icon">♫</span>
+                        <span class="dock-label" data-i18n="carplay.nav_radio"></span>
+                    </button>
+                    <button type="button" class="carplay-dock-btn" data-app="navigation" data-i18n-title="carplay.nav_navigation">
+                        <span class="dock-icon">➤</span>
+                        <span class="dock-label" data-i18n="carplay.nav_navigation"></span>
+                    </button>
+                    <button type="button" class="carplay-dock-btn" data-app="telemetry" data-i18n-title="carplay.nav_telemetry">
+                        <span class="dock-icon">◈</span>
+                        <span class="dock-label" data-i18n="carplay.nav_telemetry"></span>
+                    </button>
+                    <button type="button" class="carplay-dock-btn" data-app="controls" data-i18n-title="carplay.nav_controls">
+                        <span class="dock-icon">⚙</span>
+                        <span class="dock-label" data-i18n="carplay.nav_controls"></span>
+                    </button>
+                    <button type="button" class="carplay-dock-btn" data-app="settings" data-i18n-title="carplay.nav_settings">
+                        <span class="dock-icon">☰</span>
+                        <span class="dock-label" data-i18n="carplay.nav_settings"></span>
+                    </button>
+                </div>
+
+                <div class="carplay-dock-bottom">
+                    <button type="button" id="carplay-close-btn" class="carplay-close-btn" data-i18n="app.close"></button>
+                </div>
+            </nav>
+
+            <!-- CarPlay Viewport Content -->
+            <div id="carplay-viewport" class="carplay-viewport"></div>
+        </div>
+    </aside>
+
+    <!-- Drag-and-Drop HUD Studio Editor (Centered & Freely Movable, No Logo) -->
+    <aside id="hud-editor-modal" class="hud-editor-modal hidden" role="dialog" aria-modal="true">
+        <div id="editor-panel" class="editor-panel">
+            <header id="editor-drag-header" class="editor-header">
+                <div class="editor-brand-row">
+                    <div>
+                        <h1 class="editor-title" data-i18n="editor.title"></h1>
+                        <p class="editor-subtitle" data-i18n="editor.subtitle"></p>
+                    </div>
+                </div>
+                <button type="button" id="editor-close-top" class="editor-icon-close" data-i18n-title="app.close">✕</button>
+            </header>
+
+            <!-- Studio Navigation Tabs -->
+            <nav class="editor-tabs">
+                <button type="button" class="editor-tab-btn active" data-tab="widgets" data-i18n="editor.tab_widgets"></button>
+                <button type="button" class="editor-tab-btn" data-tab="vehicle" data-i18n="editor.tab_vehicle"></button>
+                <button type="button" class="editor-tab-btn" data-tab="themes" data-i18n="editor.tab_themes"></button>
+                <button type="button" class="editor-tab-btn" data-tab="presets" data-i18n="editor.tab_presets"></button>
+            </nav>
+
+            <!-- Dynamic Inspector Body -->
+            <div id="editor-tab-body" class="editor-tab-body"></div>
+
+            <!-- Studio Footer Actions -->
+            <footer class="editor-footer">
+                <button type="button" id="editor-reset-all-btn" class="btn-editor btn-danger" data-i18n="editor.reset_all"></button>
+                <div class="editor-footer-right">
+                    <button type="button" id="editor-cancel-btn" class="btn-editor btn-secondary" data-i18n="editor.cancel_changes"></button>
+                    <button type="button" id="editor-save-btn" class="btn-editor btn-primary" data-i18n="editor.save_layout"></button>
+                </div>
+            </footer>
+        </div>
+
+        <!-- Confirmation Dialog for Full Layout Reset -->
+        <div id="editor-confirm-modal" class="editor-confirm-modal hidden">
+            <div class="editor-confirm-card">
+                <h3 data-i18n="editor.confirm_reset_title"></h3>
+                <p data-i18n="editor.confirm_reset_desc"></p>
+                <div class="editor-confirm-actions">
+                    <button type="button" id="confirm-reset-cancel" class="btn-editor btn-secondary" data-i18n="app.cancel"></button>
+                    <button type="button" id="confirm-reset-yes" class="btn-editor btn-danger" data-i18n="app.confirm"></button>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Notification Toast Stack -->
+    <div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+    <!-- Local Scripts (Strictly Offline) -->
+    <script src="js/localization.js"></script>
+    <script src="js/persistence.js"></script>
+    <script src="js/settings.js"></script>
+    <script src="js/player-hud.js"></script>
+    <script src="js/vehicle-hud.js"></script>
+    <script src="js/carplay.js"></script>
+    <script src="js/editor.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

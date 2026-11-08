@@ -62,7 +62,7 @@ return {
         label = 'Burger',
         weight = 220,
         client = {
-            status = { hunger = 200000 },
+            status = { hunger = 20000000 },
             anim = 'eating',
             prop = 'burger',
             usetime = 2500,
@@ -144,7 +144,7 @@ return {
         label = 'Water',
         weight = 500,
         client = {
-            status = { thirst = 200000 },
+            status = { thirst = 20000000 },
             anim = { dict = 'mp_player_intdrink', clip = 'loop_bottle' },
             prop = { model = `prop_ld_flow_bottle`, pos = vec3(0.03, 0.03, 0.02), rot = vec3(0.0, 0.0, -1.5) },
             usetime = 2500,
@@ -236,20 +236,47 @@ return {
         weight = 500,
     },
 
-    ['cleaningkit'] = {
-        label = 'Cleaning Kit',
-        weight = 500,
+['cleaningkit'] = {
+    label = 'Cleaning Kit',
+    weight = 500,
+    stack = true,
+    close = true,
+    description = 'Membersihkan kendaraan',
+    client = {
+        image = 'cleaningkit.png',
     },
+    server = {
+        export = 'vehiclehandler.cleaningkit'
+    }
+},
 
-    ['repairkit'] = {
-        label = 'Repair Kit',
-        weight = 2500,
+['repairkit'] = {
+    label = 'Repair Kit',
+    weight = 2500,
+    stack = true,
+    close = true,
+    description = 'Memperbaiki kendaraan',
+    client = {
+        image = 'repairkit.png',
     },
+    server = {
+        export = 'vehiclehandler.repairkit'
+    }
+},
 
-    ['advancedrepairkit'] = {
-        label = 'Advanced Repair Kit',
-        weight = 4000,
+['advancedrepairkit'] = {
+    label = 'Advanced Repair Kit',
+    weight = 4000,
+    stack = true,
+    close = true,
+    description = 'Memperbaiki mesin kendaraan dengan lebih maksimal',
+    client = {
+        image = 'advancedrepairkit.png',
     },
+    server = {
+        export = 'vehiclehandler.advancedrepairkit'
+    }
+},
 
     ['diamond'] = {
         label = 'Diamond',
@@ -346,13 +373,13 @@ return {
         weight = 1,
     },
 
-    ['weed_og-kush'] = {
-        label = 'OGKush 2g',
+    ['weed'] = {
+        label = 'Weed 2g',
         weight = 200,
     },
 
-    ['weed_og-kush_seed'] = {
-        label = 'OGKush Seed',
+    ['weed_seed'] = {
+        label = 'Weed Seed',
         weight = 1,
     },
 
@@ -397,7 +424,7 @@ return {
     },
 
     ['empty_weed_bag'] = {
-        label = 'Empty Weed Bag',
+        label = 'Empty Clip',
         weight = 0,
     },
 
@@ -630,4 +657,23 @@ return {
         label = 'Handcuffs',
         weight = 200,
     },
+    ['meth_seed'] = {
+    label = 'Meth Seed',
+    weight = 1,
+},
+
+['meth_raw'] = {
+    label = 'Raw Meth',
+    weight = 100,
+},
+
+['coke_seed'] = {
+    label = 'Coke Seed',
+    weight = 1,
+},
+
+['coca_leaf'] = {
+    label = 'Coca Leaf',
+    weight = 100,
+},
 }

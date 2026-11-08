@@ -1,8 +1,15 @@
 local sharedConfig = require 'config.shared'
 local values = {}
 for k in pairs(sharedConfig.interiors) do
-    values[#values + 1] = k
+    if type(k) ~= 'number' or (IsModelInCdimage(k) and IsModelValid(k)) then
+        values[#values + 1] = k
+    end
 end
+
+table.sort(values, function(a, b)
+    if type(a) ~= type(b) then return type(a) == 'string' end
+    return tostring(a) < tostring(b)
+end)
 
 local car = 0
 local shell = 0
@@ -25,6 +32,11 @@ end
 local function previewProperty(propertyIndex)
     if DoesEntityExist(shell) then DeleteEntity(shell) end
     if type(propertyIndex) == 'number' then
+        if not IsModelInCdimage(propertyIndex) or not IsModelValid(propertyIndex) then
+            lib.notify({type = 'error', description = 'This shell model is not available on the server.'})
+            return
+        end
+
         lib.requestModel(propertyIndex, 5000)
         shell = CreateObject(propertyIndex, playerCoords.x, playerCoords.y, playerCoords.z - sharedConfig.shellUndergroundOffset, false, false, false)
         FreezeEntityPosition(shell, true)

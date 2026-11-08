@@ -20,28 +20,28 @@ RegisterNetEvent('qbx_properties:server:createProperty', function(interiorIndex,
     if not garageCoords and #(playerCoords - propertyCoords) > 5.0 then return end
     if garageCoords and #(playerCoords - garageCoords.xyz) > 5.0 then return end
 
-    local interactData = {
-        {
-            type = 'logout',
-            coords = sharedConfig.interiors[interiorIndex].logout
-        },
-        {
-            type = 'clothing',
-            coords = sharedConfig.interiors[interiorIndex].clothing
-        },
-        {
-            type = 'exit',
-            coords = sharedConfig.interiors[interiorIndex].exit
-        }
-    }
+    local interior = sharedConfig.interiors[interiorIndex]
+    if not interior then return end
 
-    local stashData = {
-        {
-            coords = sharedConfig.interiors[interiorIndex].stash,
+    local interactData = {}
+    for _, interactionType in ipairs({'logout', 'clothing', 'exit'}) do
+        if interior[interactionType] then
+            interactData[#interactData + 1] = {
+                type = interactionType,
+                coords = interior[interactionType]
+            }
+        end
+    end
+
+    local stashData = {}
+    if interior.stash then
+        stashData[1] = {
+            coords = interior.stash,
             slots = config.apartmentStash.slots,
             maxWeight = config.apartmentStash.maxWeight,
         }
-    }
+    end
+    if #interactData == 0 or #stashData == 0 then return end
 
     local result = MySQL.single.await('SELECT id FROM properties ORDER BY id DESC', {})
     local propertyNumber = result?.id or 0

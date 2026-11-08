@@ -8,7 +8,7 @@ local MINIMUM_TIME_PER_BAG = 2500
 ---@param player table
 ---@return boolean
 local function isGarbageWorker(player)
-    return player.PlayerData.job and player.PlayerData.job.name == 'garbage'
+    return player ~= nil
 end
 
 ---@param source number

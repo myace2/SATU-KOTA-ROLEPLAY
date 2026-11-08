@@ -1,0 +1,305 @@
+/* ============================================================================
+   NSR HUD ULTIMATE — DRAG-AND-DROP HUD STUDIO EDITOR (html/css/editor.css)
+   Centered by default, freely draggable by header, fades while dragging widgets
+   ============================================================================ */
+
+/* Alignment Grid & Center Snap Guides */
+.editor-grid-overlay {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 12;
+    background-image:
+        linear-gradient(to right, rgba(0, 229, 255, 0.07) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(0, 229, 255, 0.07) 1px, transparent 1px);
+    background-size: 40px 40px;
+}
+
+.snap-line {
+    position: fixed;
+    background: var(--nsr-primary);
+    box-shadow: 0 0 8px var(--nsr-primary);
+    pointer-events: none;
+}
+.snap-line-x {
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 1px;
+}
+.snap-line-y {
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: 1px;
+}
+
+/* Selection Outline on Widgets inside Editor */
+body.editor-active .hud-widget,
+body.editor-active .vehicle-hud-wrapper {
+    outline: 1.5px dashed rgba(0, 229, 255, 0.55);
+    outline-offset: 4px;
+    cursor: grab !important;
+    pointer-events: auto !important;
+}
+
+body.editor-active .hud-widget:active,
+body.editor-active .vehicle-hud-wrapper:active {
+    cursor: grabbing !important;
+}
+
+body.editor-active .hud-widget.editor-selected,
+body.editor-active .vehicle-hud-wrapper.editor-selected {
+    outline: 2px solid var(--nsr-primary);
+    outline-offset: 5px;
+    box-shadow: 0 0 18px rgba(0, 229, 255, 0.45);
+}
+
+/* Studio Inspector Panel — Centered on screen & freely movable */
+.hud-editor-modal {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 300;
+}
+
+.editor-panel {
+    position: fixed;
+    left: calc(50vw - 205px);
+    top: calc(50vh - 290px);
+    width: 410px;
+    max-height: calc(100vh - 48px);
+    background: var(--nsr-surface-elevated);
+    border: 1px solid var(--nsr-border);
+    border-radius: var(--nsr-radius-lg);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.78);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    pointer-events: auto;
+    transition: opacity 0.15s ease;
+}
+
+/* When actively dragging a HUD widget on canvas, make the studio panel translucent & non-blocking */
+.editor-panel.dragging-canvas-item {
+    opacity: 0.22;
+    pointer-events: none !important;
+}
+
+.editor-header {
+    padding: 14px 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.10);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: move;
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.editor-brand-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.editor-title {
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--nsr-text);
+    letter-spacing: 0.3px;
+}
+
+.editor-subtitle {
+    font-size: 11px;
+    color: var(--nsr-text-muted);
+    margin-top: 2px;
+}
+
+.editor-icon-close {
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--nsr-text);
+    cursor: pointer;
+    flex-shrink: 0;
+}
+.editor-icon-close:hover {
+    background: rgba(239, 68, 68, 0.25);
+    border-color: rgba(239, 68, 68, 0.45);
+}
+
+.editor-tabs {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 4px;
+    padding: 8px 12px;
+    background: rgba(0, 0, 0, 0.25);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.editor-tab-btn {
+    padding: 7px 6px;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    background: transparent;
+    color: var(--nsr-text-muted);
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+}
+.editor-tab-btn.active {
+    background: rgba(0, 229, 255, 0.14);
+    border-color: var(--nsr-border);
+    color: var(--nsr-primary);
+}
+
+.editor-tab-body {
+    flex: 1;
+    padding: 14px 16px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.editor-widget-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.editor-widget-chip {
+    padding: 5px 10px;
+    border-radius: 99px;
+    font-size: 11px;
+    font-weight: 600;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: var(--nsr-text);
+    cursor: pointer;
+}
+.editor-widget-chip.active {
+    background: var(--nsr-primary);
+    color: #060911;
+    border-color: var(--nsr-primary);
+}
+
+.editor-prop-group {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.editor-prop-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    font-size: 12px;
+}
+
+.editor-prop-row label {
+    color: var(--nsr-text-muted);
+    font-weight: 600;
+}
+
+.editor-select,
+.editor-range,
+.editor-color {
+    cursor: pointer;
+}
+
+.editor-range {
+    width: 150px;
+}
+
+.editor-select {
+    padding: 5px 8px;
+    border-radius: 8px;
+    background: #0F172A;
+    color: var(--nsr-text);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    font-size: 12px;
+}
+
+.editor-footer {
+    padding: 12px 16px;
+    border-top: 1px solid rgba(255, 255, 255, 0.10);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.editor-footer-right {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-editor {
+    padding: 8px 12px;
+    border-radius: 9px;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    border: 1px solid transparent;
+}
+.btn-primary {
+    background: var(--nsr-primary);
+    color: #060911;
+}
+.btn-secondary {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.16);
+    color: var(--nsr-text);
+}
+.btn-danger {
+    background: rgba(239, 68, 68, 0.16);
+    border-color: rgba(239, 68, 68, 0.38);
+    color: #FCA5A5;
+}
+
+/* Confirmation Modal */
+.editor-confirm-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(3, 6, 12, 0.65);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: auto;
+    z-index: 400;
+}
+
+.editor-confirm-card {
+    width: 360px;
+    padding: 20px;
+    border-radius: 16px;
+    background: var(--nsr-surface-elevated);
+    border: 1px solid var(--nsr-border);
+    box-shadow: var(--nsr-shadow);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.editor-confirm-card h3 {
+    font-size: 15px;
+    font-weight: 800;
+}
+.editor-confirm-card p {
+    font-size: 12px;
+    color: var(--nsr-text-muted);
+    line-height: 1.45;
+}
+.editor-confirm-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+}

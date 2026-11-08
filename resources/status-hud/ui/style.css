@@ -1,0 +1,373 @@
+:root {
+  --bar-color: #f3163e;
+  --bar-glow: #f3163e80;
+  --icon-color: #f3163e;
+  --text-color: #f3163e;
+}
+
+#status-hud {
+  position: fixed;
+  bottom: 3.5vh;
+  left: 29vh;
+  font-family: "Rajdhani", sans-serif;
+  color: white;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.hud-container {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  border-radius: 4px;
+}
+
+.stats-container {
+  padding-left: 15px;
+  border-left: 2px solid rgba(255, 255, 255, 0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.stat-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 4px;
+  transition: all 0.3s ease;
+}
+
+.stat-bar:hover {
+  transform: translateX(2px);
+}
+
+.stat-info {
+  display: flex;
+  align-items: center;
+  min-width: 48px;
+}
+
+.stat-bar i {
+  font-size: 12px;
+  color: var(--icon-color);
+  opacity: 0.9;
+  filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.3));
+  background: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0.15) 0%,
+    rgba(44, 44, 44, 0.05) 100%
+  );
+  padding: 4px 6px;
+  border-radius: 3px;
+  animation: pulse 2s infinite ease-in-out;
+}
+
+.stat-info .value {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-color);
+  text-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
+  letter-spacing: 0.5px;
+}
+
+.bar-progress {
+  width: 38px;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+}
+
+.bar-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: var(--bar-color);
+  transition: width 0.3s ease;
+  box-shadow: 0 0 8px var(--bar-glow);
+}
+
+.stat-bar i {
+  filter: drop-shadow(0 0 2px #f3163e80);
+}
+
+.hidden {
+  display: none;
+}
+
+.player-id,
+.player-location {
+  position: fixed;
+  background: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0.15) 0%,
+    rgba(44, 44, 44, 0.05) 100%
+  );
+  padding: 5px 10px;
+  border-radius: 3px;
+  color: white;
+  font-family: "Rajdhani", sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  bottom: 20.2%;
+}
+
+.player-id {
+  left: 33px;
+}
+
+.player-location {
+  left: 116px;
+}
+
+.player-id i,
+.player-location i {
+  font-size: 12px;
+  color: var(--icon-color);
+  opacity: 0.9;
+  filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.3));
+  padding-right: 8px;
+  border-right: 2px solid rgba(255, 255, 255, 0.15);
+}
+
+.id-value,
+.location-value {
+  color: #fff;
+  margin-left: 4px;
+}
+
+.player-meta {
+  position: fixed;
+  left: 33px;
+  bottom: calc(20.2% + 34px);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 5px;
+  max-width: min(620px, 90vw);
+  font-family: "Rajdhani", sans-serif;
+  color: #fff;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
+}
+
+.player-meta-groups {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  max-width: 90vw;
+}
+
+.player-detail {
+  display: flex;
+  align-items: center;
+  width: fit-content;
+  min-width: 0;
+  max-width: 45vw;
+  gap: 6px;
+  min-height: 22px;
+  padding: 3px 8px;
+  border-left: 2px solid #f3163e;
+  border-radius: 2px;
+  background: rgba(12, 12, 12, 0.68);
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.server-name-detail {
+  min-height: 28px;
+  border-left-width: 3px;
+  font-size: 18px;
+  letter-spacing: 0.5px;
+}
+
+.server-name-detail i {
+  font-size: 14px;
+}
+
+.player-detail i {
+  color: #f3163e;
+  font-size: 11px;
+}
+
+.server-name-value,
+.job-value,
+.gang-value {
+  color: #fff;
+}
+
+.speedometer {
+  display: none;
+  position: fixed;
+  right: 3.5vw;
+  bottom: 4vh;
+  width: 280px;
+  height: 190px;
+  overflow: hidden;
+  color: #fff;
+  font-family: "Rajdhani", sans-serif;
+  background: linear-gradient(
+    145deg,
+    rgba(20, 20, 20, 0.84),
+    rgba(8, 8, 8, 0.68)
+  );
+  border: 1px solid rgba(243, 22, 62, 0.35);
+  border-bottom: 2px solid #f3163e;
+  border-radius: 6px;
+  box-shadow: 0 0 18px rgba(0, 0, 0, 0.35);
+}
+
+.speedometer-header {
+  position: absolute;
+  top: 10px;
+  left: 16px;
+  right: 16px;
+  display: flex;
+  justify-content: space-between;
+  color: #f3163e;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.speed-gauge {
+  position: absolute;
+  top: 21px;
+  left: 30px;
+  width: 220px;
+  height: 130px;
+  overflow: visible;
+}
+
+.gauge-track,
+.gauge-fill {
+  fill: none;
+  stroke-width: 7;
+  stroke-linecap: round;
+}
+
+.gauge-track {
+  stroke: rgba(255, 255, 255, 0.16);
+}
+
+.gauge-fill {
+  stroke: #f3163e;
+  stroke-dasharray: 263.89;
+  stroke-dashoffset: 263.89;
+  filter: drop-shadow(0 0 5px rgba(243, 22, 62, 0.8));
+  transition: stroke-dashoffset 0.15s linear;
+}
+
+.speed-readout {
+  position: absolute;
+  top: 63px;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 8px;
+}
+
+#speed-value {
+  min-width: 100px;
+  color: #fff;
+  font-size: 42px;
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+  text-shadow: 0 0 10px rgba(243, 22, 62, 0.45);
+}
+
+.gear-label,
+#gear-value {
+  color: #f3163e;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.speedometer-footer {
+  position: absolute;
+  right: 16px;
+  bottom: 12px;
+  left: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.rpm-info,
+.vehicle-info,
+.vehicle-info span {
+  display: flex;
+  align-items: center;
+}
+
+.rpm-info {
+  gap: 6px;
+  flex: 1;
+}
+
+.rpm-info > span,
+.rpm-info > b,
+.vehicle-info b {
+  color: #f3163e;
+}
+
+.rpm-track {
+  width: 52px;
+  height: 4px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: 4px;
+}
+
+#rpm-fill {
+  width: 0;
+  height: 100%;
+  background: #f3163e;
+  box-shadow: 0 0 6px rgba(243, 22, 62, 0.8);
+  transition: width 0.15s linear;
+}
+
+.vehicle-info {
+  gap: 12px;
+}
+
+.vehicle-info span {
+  gap: 4px;
+}
+
+@media (max-width: 700px) {
+  .speedometer {
+    right: 2vw;
+    bottom: 3vh;
+    transform: scale(0.82);
+    transform-origin: bottom right;
+  }
+}
+
+/* Animations And Effecs :0 */
+@keyframes pulse {
+  0% {
+    opacity: 0.8;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.8;
+  }
+}

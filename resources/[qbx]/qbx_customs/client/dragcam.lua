@@ -6,9 +6,23 @@ local gEntity = nil
 local gRadius = nil
 local gRadiusMax = nil
 local gRadiusMin = nil
-local scaleform = nil
 local scrollIncrements = nil
 local isFirstPersonView = false
+
+local function setHelpVisible(visible)
+    SendNUIMessage({
+        action = 'setHelp',
+        data = {
+            visible = visible,
+            prompts = visible and {
+                { key = 'LMB', label = locale('dragCam.orbit') },
+                { key = 'SCROLL', label = locale('dragCam.zoom') },
+                { key = 'SPACE', label = locale('dragCam.toggleDoors') },
+                { key = 'V', label = locale('dragCam.changeView') },
+            } or nil,
+        }
+    })
+end
 
 local function cos(degrees)
     return math.cos(math.rad(degrees))
@@ -144,63 +158,11 @@ local function inputListener()
     end)
 end
 
-local function instructionalButton(controlId, text)
-    ScaleformMovieMethodAddParamPlayerNameString(GetControlInstructionalButton(0, controlId, true))
-    BeginTextCommandScaleformString('STRING')
-    AddTextComponentSubstringKeyboardDisplay(text)
-    EndTextCommandScaleformString()
-end
-
-local function showInstructionalButtons()
-    CreateThread(function()
-        scaleform = RequestScaleformMovie('instructional_buttons')
-        while not HasScaleformMovieLoaded(scaleform) do
-            Wait(0)
-        end
-        BeginScaleformMovieMethod(scaleform, 'CLEAR_ALL')
-        EndScaleformMovieMethod()
-
-        BeginScaleformMovieMethod(scaleform, 'SET_DATA_SLOT')
-        ScaleformMovieMethodAddParamInt(1)
-        instructionalButton(14, locale('dragCam.zoomOut'))
-        EndScaleformMovieMethod()
-
-        BeginScaleformMovieMethod(scaleform, 'SET_DATA_SLOT')
-        ScaleformMovieMethodAddParamInt(2)
-        instructionalButton(15, locale('dragCam.zoomIn'))
-        EndScaleformMovieMethod()
-
-        BeginScaleformMovieMethod(scaleform, 'SET_DATA_SLOT')
-        ScaleformMovieMethodAddParamInt(3)
-        instructionalButton(22, locale('dragCam.toggleDoors'))
-        EndScaleformMovieMethod()
-
-        BeginScaleformMovieMethod(scaleform, 'SET_DATA_SLOT')
-        ScaleformMovieMethodAddParamInt(4)
-        instructionalButton(0, locale('dragCam.changeView'))
-        EndScaleformMovieMethod()
-
-        BeginScaleformMovieMethod(scaleform, 'DRAW_INSTRUCTIONAL_BUTTONS')
-        EndScaleformMovieMethod()
-
-        BeginScaleformMovieMethod(scaleform, 'SET_BACKGROUND_COLOUR')
-        ScaleformMovieMethodAddParamInt(0)
-        ScaleformMovieMethodAddParamInt(0)
-        ScaleformMovieMethodAddParamInt(0)
-        ScaleformMovieMethodAddParamInt(80)
-        EndScaleformMovieMethod()
-
-        while running do
-            DrawScaleformMovieFullscreen(scaleform, 255, 255, 255, 255, 0)
-            Wait(0)
-        end
-    end)
-end
-
 ---@param entity integer
 ---@param radiusOptions? {initial?: number, min?: number, max?: number, scrollIncrements?: number}
 local function startDragCam(entity, radiusOptions)
     running = true
+    isFirstPersonView = false
     gEntity = entity
     gRadius = radiusOptions?.initial or 5.0
     gRadiusMin = radiusOptions?.min or 2.5
@@ -208,16 +170,17 @@ local function startDragCam(entity, radiusOptions)
     scrollIncrements = radiusOptions?.scrollIncrements or 0.5
     cam = CreateCam('DEFAULT_SCRIPTED_CAMERA', true)
     RenderScriptCams(true, true, 0, true, false)
-    showInstructionalButtons()
+    setHelpVisible(true)
     inputListener()
 end
 
 local function stopDragCam()
     running = false
+    isFirstPersonView = false
     RenderScriptCams(false, true, 0, true, false)
     DestroyCam(cam, true)
     SetCamViewModeForContext(1, 1)
-    SetScaleformMovieAsNoLongerNeeded(scaleform)
+    setHelpVisible(false)
 end
 
 return {

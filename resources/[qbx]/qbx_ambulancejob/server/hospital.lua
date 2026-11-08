@@ -159,27 +159,42 @@ local function wipeInventory(src)
 	exports.qbx_core:Notify(src, locale('error.possessions_taken'), 'error')
 end
 
-local function getAuthorizedVehicleSpawn(player, vehicleName)
-	local grade = player.PlayerData.job.grade.level
-	local ped = GetPlayerPed(player.PlayerData.source)
-	if ped == 0 then return end
+-- local function getAuthorizedVehicleSpawn(player, vehicleName)
+-- 	local grade = player.PlayerData.job.grade.level
+-- 	local ped = GetPlayerPed(player.PlayerData.source)
+-- 	if ped == 0 then return end
 
-	local playerCoords = GetEntityCoords(ped)
-	local vehicleGroups = {
-		{ vehicles = clientConfig.authorizedVehicles[grade], locations = sharedConfig.locations.vehicle },
-		{ vehicles = clientConfig.authorizedHelicopters[grade], locations = sharedConfig.locations.helicopter }
-	}
+-- 	local playerCoords = GetEntityCoords(ped)
+-- 	local vehicleGroups = {
+-- 		{ vehicles = clientConfig.authorizedVehicles[grade], locations = sharedConfig.locations.vehicle },
+-- 		{ vehicles = clientConfig.authorizedHelicopters[grade], locations = sharedConfig.locations.helicopter }
+-- 	}
 
-	for i = 1, #vehicleGroups do
-		local group = vehicleGroups[i]
-		if group.vehicles and group.vehicles[vehicleName] then
-			for j = 1, #group.locations do
-				local coords = group.locations[j]
-				if #(playerCoords - coords.xyz) <= 7.5 then return coords end
-			end
-		end
-	end
-end
+-- 	for i = 1, #vehicleGroups do
+-- 		local group = vehicleGroups[i]
+-- 		if group.vehicles and group.vehicles[vehicleName] then
+-- 			for j = 1, #group.locations do
+-- 				local coords = group.locations[j]
+-- 				if #(playerCoords - coords.xyz) <= 7.5 then return coords end
+-- 			end
+-- 		end
+-- 	end
+-- end
+
+lib.callback.register('qbx_ambulancejob:server:spawnVehicle', function(source, vehicleName, vehicleCoords)
+    local netId, veh = qbx.spawnVehicle({
+        model = joaat(vehicleName),
+        spawnSource = vehicleCoords,
+        warp = GetPlayerPed(source)
+    })
+
+    if veh then
+        exports.qbx_vehiclekeys:GiveKeys(source, veh)
+    end
+
+    return netId
+end)
+
 
 lib.callback.register('qbx_ambulancejob:server:spawnVehicle', function(source, vehicleName)
 	if type(vehicleName) ~= 'string' then return end

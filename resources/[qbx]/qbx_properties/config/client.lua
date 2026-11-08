@@ -1,4 +1,5 @@
 return {
+    showApartmentBlips = false,
     exteriorHashs = { -- Used for hiding the exterior when inside of an apartment IPL
         ['DellPerroHeightsApt4'] = {`sm_14_emissive`, `hei_sm_14_bld2`},
         ['DellPerroHeightsApt7'] = {`sm_14_emissive`, `hei_sm_14_bld2`},

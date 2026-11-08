@@ -1,0 +1,145 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div id="player-meta" class="player-meta">
+      <div class="player-detail server-name-detail">
+        <i class="fas fa-server"></i
+        ><span class="server-name-value">SATU KOTA</span>
+      </div>
+      <div class="player-meta-groups">
+        <div class="player-detail">
+          <i class="fas fa-briefcase"></i><span class="job-value">Civilian</span>
+        </div>
+        <div class="player-detail">
+          <i class="fas fa-people-group"></i><span class="gang-value">None</span>
+        </div>
+      </div>
+    </div>
+    <div id="player-id" class="player-id">
+      <i class="fas fa-user"></i>
+      <span class="id-value">ID: 0</span>
+    </div>
+    <div id="player-location" class="player-location">
+      <i class="fas fa-location-dot"></i>
+      <span class="location-value">Unknown Location</span>
+    </div>
+    <div id="vehicle-speedometer" class="speedometer">
+      <div class="speedometer-header">
+        <span id="speed-unit">KM/H</span>
+        <span id="engine-status">ENGINE OFF</span>
+      </div>
+      <svg class="speed-gauge" viewBox="0 0 220 130" aria-hidden="true">
+        <path class="gauge-track" d="M 26 108 A 84 84 0 0 1 194 108" />
+        <path
+          id="gauge-fill"
+          class="gauge-fill"
+          d="M 26 108 A 84 84 0 0 1 194 108"
+        />
+      </svg>
+      <div class="speed-readout">
+        <span id="speed-value">000</span>
+        <span class="gear-label">GEAR</span>
+        <span id="gear-value">N</span>
+      </div>
+      <div class="speedometer-footer">
+        <div class="rpm-info">
+          <span>RPM</span>
+          <div class="rpm-track"><div id="rpm-fill"></div></div>
+          <b id="rpm-value">0%</b>
+        </div>
+        <div class="vehicle-info">
+          <span>FUEL <b id="fuel-value">0%</b></span>
+          <span id="seatbelt-status">BELT OFF</span>
+        </div>
+      </div>
+    </div>
+    <div id="status-hud" class="hud-right">
+      <div class="hud-container">
+        <div class="stats-container">
+          <div class="stat-bar health">
+            <i class="fas fa-heart"></i>
+            <div class="bar-progress">
+              <div class="bar-fill"></div>
+            </div>
+            <div class="stat-info">
+              <span class="value">100%</span>
+            </div>
+          </div>
+
+          <div class="stat-bar armor">
+            <i class="fas fa-shield-alt"></i>
+            <div class="bar-progress">
+              <div class="bar-fill"></div>
+            </div>
+            <div class="stat-info">
+              <span class="value">100%</span>
+            </div>
+          </div>
+
+          <div class="stat-bar food">
+            <i class="fas fa-drumstick-bite"></i>
+            <div class="bar-progress">
+              <div class="bar-fill"></div>
+            </div>
+            <div class="stat-info">
+              <span class="value">100%</span>
+            </div>
+          </div>
+
+          <div class="stat-bar water">
+            <i class="fas fa-tint"></i>
+            <div class="bar-progress">
+              <div class="bar-fill"></div>
+            </div>
+            <div class="stat-info">
+              <span class="value">100%</span>
+            </div>
+          </div>
+
+          <div class="stat-bar stress">
+            <i class="fas fa-brain"></i>
+            <div class="bar-progress">
+              <div class="bar-fill"></div>
+            </div>
+            <div class="stat-info">
+              <span class="value">0%</span>
+            </div>
+          </div>
+
+          <div class="stat-bar drunk">
+            <i class="fas fa-martini-glass"></i>
+            <div class="bar-progress">
+              <div class="bar-fill"></div>
+            </div>
+            <div class="stat-info">
+              <span class="value">0%</span>
+            </div>
+          </div>
+
+          <div class="stat-bar energy">
+            <i class="fas fa-bolt"></i>
+            <div class="bar-progress">
+              <div class="bar-fill"></div>
+            </div>
+            <div class="stat-info">
+              <span class="value">100%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>

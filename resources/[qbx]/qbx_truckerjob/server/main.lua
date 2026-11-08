@@ -24,10 +24,6 @@ local function getPlayer(source)
     local player = exports.qbx_core:GetPlayer(source)
     if not player then return end
 
-    if player.PlayerData.job.name ~= 'trucker' then
-        return DropPlayer(source, locale('exploit_attempt'))
-    end
-
     return player
 end
 

@@ -174,13 +174,10 @@ RegisterNetEvent('qb-drugs:server:successDelivery', function()
     end
     payout = math.floor(payout)
 
-    if config.useMarkedBills then
-        exports.ox_inventory:AddItem(src, 'markedbills', 1, {
-            worth = payout,
-            description = 'Value: ' .. payout,
-        })
-    else
-        player.Functions.AddMoney('cash', payout, onTime and 'drug-delivery' or 'delivery-drugs-too-late')
+    if not exports.ox_inventory:AddItem(src, 'black_money', payout) then
+        exports.ox_inventory:AddItem(src, itemData.item, deliveredAmount)
+        exports.qbx_core:Notify(src, locale('error.item_unavailable'), 'error')
+        return
     end
 
     local currentRep = player.PlayerData.metadata.dealerrep

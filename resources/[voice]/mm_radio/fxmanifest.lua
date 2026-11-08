@@ -34,7 +34,9 @@ files {
 }
 
 dependencies {
-    'pma-voice',
+    'qbx_core',
     'ox_lib',
+    'ox_inventory',
+    'pma-voice',
     '/onesync'
 }

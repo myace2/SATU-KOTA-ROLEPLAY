@@ -1,0 +1,459 @@
+/* ============================================================================
+   NSR HUD ULTIMATE — 6 FRAMELESS DYNAMIC CARHUD STYLES (html/css/vehicle.css)
+   Strictly ZERO rectangular blue background box!
+   Styles:
+   1. aggressive    (Circular Tachometer 1-6 with white/red arc & green fuel bar)
+   2. modern        (Circular Speedometer 20-300 with sweeping needle & green fuel arc)
+   3. circle        (Clean Open Ring with top gear underline & green right fuel arc)
+   4. simple_racing (Frameless Italic Speedo + 12 Vertical Segmented RPM Bars)
+   5. simple        (Frameless Minimalist Street Speedo + Bottom Progress Bar)
+   6. sport         (Wide Twin-Wing Supercar Cluster with center car silhouette)
+   7. nfs_heat      (Frameless 240° Pro Tachometer with sweeping red needle)
+   + Automatic Aircraft Mode & Watercraft Mode circular gauges!
+   ============================================================================ */
+
+.vehicle-hud-wrapper {
+    position: absolute;
+    transform-origin: top left;
+    pointer-events: none;
+    z-index: 15;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+body.editor-active .vehicle-hud-wrapper {
+    pointer-events: auto;
+    cursor: grab;
+}
+
+.vehicle-hud-cluster {
+    position: relative;
+    color: #F8FAFC;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+}
+
+/* Shared Telltale SVG Icon Helper */
+.ch-icon {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    background-color: currentColor;
+    -webkit-mask-size: contain;
+    mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    mask-position: center;
+    transition: color 0.15s ease, filter 0.15s ease;
+}
+
+.ch-telltale {
+    color: rgba(255, 255, 255, 0.25);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s ease;
+}
+.ch-telltale.on-green {
+    color: #4ADE80;
+    filter: drop-shadow(0 0 5px rgba(74, 222, 128, 0.6));
+}
+.ch-telltale.on-amber {
+    color: #FACC15;
+    filter: drop-shadow(0 0 5px rgba(250, 204, 21, 0.6));
+}
+.ch-telltale.on-red {
+    color: #F87171;
+    filter: drop-shadow(0 0 6px rgba(248, 113, 113, 0.75));
+}
+.ch-telltale.on-cyan {
+    color: #38BDF8;
+    filter: drop-shadow(0 0 5px rgba(56, 189, 248, 0.7));
+}
+.ch-telltale.blink {
+    animation: chBlink 0.65s infinite;
+}
+
+@keyframes chBlink {
+    0%, 100% { opacity: 1; }
+    50%      { opacity: 0.2; }
+}
+
+/* ============================================================================
+   STYLE 1, 2, 3 & AIRCRAFT/BOAT: CIRCULAR FLOATING DIALS (No square box!)
+   ============================================================================ */
+.ch-dial-wrap {
+    position: relative;
+    width: 210px;
+    height: 210px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ch-dial-lens {
+    position: absolute;
+    inset: 14px;
+    border-radius: 50%;
+    background: radial-gradient(circle at center, rgba(14, 16, 20, 0.72) 0%, rgba(8, 10, 14, 0.84) 100%);
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.55);
+}
+
+.ch-dial-svg {
+    position: relative;
+    z-index: 2;
+    width: 210px;
+    height: 210px;
+    overflow: visible;
+}
+
+.ch-dial-center {
+    position: absolute;
+    z-index: 3;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    pointer-events: none;
+}
+
+/* Gear Strip (`N  1  2` or `1 [2] 3`) */
+.ch-gear-strip {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-family: var(--nsr-font-mono);
+    font-size: 11px;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.35);
+}
+.ch-gear-strip .gear-active-pill {
+    padding: 1px 6px;
+    border-radius: 3px;
+    background: #FFFFFF;
+    color: #090B10;
+    font-weight: 900;
+}
+.ch-gear-strip .gear-active-red {
+    color: #EF4444;
+    font-weight: 900;
+    border-bottom: 2px solid #EF4444;
+    padding-bottom: 1px;
+}
+
+/* Speed Readout inside Circular Dials */
+.ch-speed-big {
+    font-family: var(--nsr-font-sans);
+    font-size: 40px;
+    font-weight: 800;
+    line-height: 0.95;
+    letter-spacing: -1px;
+    color: #FFFFFF;
+}
+.ch-speed-big.italic-condensed {
+    font-family: var(--nsr-font-mono);
+    font-style: italic;
+    font-weight: 900;
+    font-size: 42px;
+}
+
+.ch-unit-sub {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: rgba(255, 255, 255, 0.48);
+    text-transform: uppercase;
+}
+
+/* Aggressive Style Inline Fuel Bar */
+.ch-agg-fuel-row {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 4px;
+}
+.ch-agg-fuel-track {
+    width: 54px;
+    height: 4px;
+    border-radius: 99px;
+    background: rgba(255, 255, 255, 0.14);
+    overflow: hidden;
+}
+.ch-agg-fuel-fill {
+    height: 100%;
+    border-radius: 99px;
+    background: #84CC16;
+    transition: width 0.2s ease;
+}
+
+.ch-bottom-icons {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    margin-top: 5px;
+}
+
+.ch-corner-fuel-badge {
+    position: absolute;
+    right: 8px;
+    bottom: 22px;
+    z-index: 4;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    font-family: var(--nsr-font-mono);
+    font-size: 10px;
+    font-weight: 800;
+    color: #84CC16;
+}
+
+/* Mode Caption (`[Aircraft Mode]` / `[Watercraft Mode]`) */
+.ch-mode-caption {
+    margin-top: 4px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    font-size: 9px;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.55);
+    text-align: center;
+}
+
+/* ============================================================================
+   STYLE 4: SIMPLE RACING STYLE (`preset-simple_racing`)
+   Frameless Italic Speed + 12 Vertical Segmented RPM Bars + Right Icon Column
+   ============================================================================ */
+.ch-simple-racing {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    min-width: 220px;
+}
+
+.ch-sr-top {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    padding-left: 2px;
+}
+
+.ch-sr-speed {
+    font-family: var(--nsr-font-mono);
+    font-size: 46px;
+    font-weight: 900;
+    font-style: italic;
+    line-height: 0.9;
+    letter-spacing: -2px;
+    color: #FFFFFF;
+    text-shadow: 0 4px 16px rgba(0, 0, 0, 0.65);
+}
+
+.ch-sr-unit {
+    font-size: 11px;
+    font-weight: 800;
+    color: rgba(255, 255, 255, 0.45);
+    text-transform: uppercase;
+}
+
+.ch-sr-bottom {
+    display: flex;
+    align-items: stretch;
+    gap: 8px;
+}
+
+.ch-sr-bars {
+    display: grid;
+    grid-template-columns: repeat(12, 11px);
+    gap: 4px;
+    height: 34px;
+    padding-bottom: 4px;
+    border-bottom: 3px solid rgba(255, 255, 255, 0.85);
+}
+
+.ch-sr-seg {
+    border-radius: 2px;
+    background: rgba(255, 255, 255, 0.16);
+    transition: background 0.06s linear;
+}
+.ch-sr-seg.active {
+    background: #FFFFFF;
+    box-shadow: 0 0 6px rgba(255, 255, 255, 0.5);
+}
+.ch-sr-seg.red-zone {
+    background: rgba(185, 28, 28, 0.28);
+}
+.ch-sr-seg.red-zone.active {
+    background: #EF4444;
+    box-shadow: 0 0 8px rgba(239, 68, 68, 0.8);
+}
+
+.ch-sr-icons-col {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 2px;
+}
+
+/* ============================================================================
+   STYLE 5: SIMPLE STYLE (`preset-simple`)
+   Frameless Minimalist Street Speedo + Fuel Left + Icons Right + Bottom Bar
+   ============================================================================ */
+.ch-simple-clean {
+    width: 210px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.ch-sc-top {
+    display: flex;
+    align-items: baseline;
+    justify-content: flex-end;
+    gap: 6px;
+}
+
+.ch-sc-speed {
+    font-family: var(--nsr-font-sans);
+    font-size: 36px;
+    font-weight: 800;
+    line-height: 1;
+    color: #FFFFFF;
+    text-shadow: 0 3px 12px rgba(0, 0, 0, 0.65);
+}
+
+.ch-sc-unit {
+    font-size: 13px;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.45);
+}
+
+.ch-sc-mid {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.ch-sc-fuel {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-family: var(--nsr-font-mono);
+    font-size: 12px;
+    font-weight: 700;
+    color: #FFFFFF;
+}
+
+.ch-sc-bar-track {
+    width: 100%;
+    height: 5px;
+    border-radius: 99px;
+    background: rgba(255, 255, 255, 0.16);
+    overflow: hidden;
+}
+
+.ch-sc-bar-fill {
+    height: 100%;
+    border-radius: 99px;
+    background: #FFFFFF;
+    transition: width 0.1s linear;
+}
+
+/* ============================================================================
+   STYLE 6: SPORT STYLE (`preset-sport`)
+   Wide Twin-Wing Supercar Telemetry Cluster with Center Car Silhouette
+   ============================================================================ */
+.ch-sport-wide {
+    position: relative;
+    width: 410px;
+    height: 148px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.ch-sport-svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    overflow: visible;
+}
+
+.ch-sport-left-info {
+    position: relative;
+    z-index: 3;
+    padding-left: 38px;
+    padding-top: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.ch-sport-gears {
+    display: flex;
+    gap: 6px;
+    font-family: var(--nsr-font-mono);
+    font-size: 13px;
+    font-weight: 800;
+    font-style: italic;
+    color: rgba(255, 255, 255, 0.35);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+    padding-bottom: 2px;
+}
+.ch-sport-gears .active {
+    color: #F97316;
+    transform: scale(1.18);
+}
+
+.ch-sport-speed-row {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+}
+.ch-sport-speed-val {
+    font-family: var(--nsr-font-mono);
+    font-size: 32px;
+    font-weight: 900;
+    font-style: italic;
+    color: #FFFFFF;
+}
+
+.ch-sport-center-car {
+    position: absolute;
+    left: 50%;
+    top: 54%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    width: 54px;
+    height: 92px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.0) 0%, rgba(255,255,255,0.06) 50%, rgba(255,255,255,0.0) 100%);
+    border-left: 1px solid rgba(255, 255, 255, 0.14);
+    border-right: 1px solid rgba(255, 255, 255, 0.14);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.ch-sport-center-car img {
+    width: 34px;
+    height: auto;
+    opacity: 0.9;
+}
+
+.ch-sport-right-icons {
+    position: relative;
+    z-index: 3;
+    padding-right: 46px;
+    padding-top: 44px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}

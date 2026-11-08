@@ -57,15 +57,15 @@ end
 CreateThread(function()
     for i = 1, #sharedConfig.pawnLocation do
         local shopConfig = sharedConfig.pawnLocation[i]
-        local blip = AddBlipForCoord(shopConfig.coords.x, shopConfig.coords.y, shopConfig.coords.z)
-        SetBlipSprite(blip, 431)
-        SetBlipDisplay(blip, 4)
-        SetBlipScale(blip, 0.7)
-        SetBlipAsShortRange(blip, true)
-        SetBlipColour(blip, 5)
-        BeginTextCommandSetBlipName('STRING')
-        AddTextComponentSubstringPlayerName(locale('info.title'))
-        EndTextCommandSetBlipName(blip)
+        -- local blip = AddBlipForCoord(shopConfig.coords.x, shopConfig.coords.y, shopConfig.coords.z)
+        -- SetBlipSprite(blip, 431)
+        -- SetBlipDisplay(blip, 4)
+        -- SetBlipScale(blip, 0.7)
+        -- SetBlipAsShortRange(blip, true)
+        -- SetBlipColour(blip, 5)
+        -- BeginTextCommandSetBlipName('STRING')
+        -- AddTextComponentSubstringPlayerName(locale('info.title'))
+        -- EndTextCommandSetBlipName(blip)
 
         addPawnShop(i, shopConfig)
     end

@@ -7,7 +7,7 @@ return {
     ---@param coords vector3
     ---@param radius? number
     drawDropOffMarker = function(coords, radius)
-        local size = (radius or 1.5) * 2
+        local size = (radius or 1.5) * 10
         local baseSize = 3.0
         local baseOffset = 2.9
         local zOffset = baseOffset
@@ -26,7 +26,7 @@ return {
     ---@param coords vector3
     ---@param radius? number
     drawGarageMarker = function(coords, radius)
-        local size = (radius or 1.0) * 2
+        local size = (radius or 1.0) * 10
         local baseSize = 2.0
         local baseOffset = 2.3
         local zOffset = baseOffset

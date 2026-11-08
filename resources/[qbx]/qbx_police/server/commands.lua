@@ -274,15 +274,36 @@ lib.addCommand('depot', {
         help = locale('info.impound_price')
     }},
 }, function(source, args)
+
     local player = exports.qbx_core:GetPlayer(source)
-    if not checkLeoAndOnDuty(player) then return end
-    TriggerClientEvent('police:client:ImpoundVehicle', source, false, args.price)
+
+    if not checkLeoAndOnDuty(player) then
+        return
+    end
+
+    TriggerClientEvent(
+        'police:client:ImpoundVehicle',
+        source,
+        false,
+        args.price
+    )
 end)
 
-lib.addCommand('impound', {help = locale('commands.impound')}, function(source)
+lib.addCommand('impound', {
+    help = locale('commands.impound')
+}, function(source)
+
     local player = exports.qbx_core:GetPlayer(source)
-    if not checkLeoAndOnDuty(player) then return end
-    TriggerClientEvent('police:client:ImpoundVehicle', source, true)
+
+    if not checkLeoAndOnDuty(player) then
+        return
+    end
+
+    TriggerClientEvent(
+        'police:client:ImpoundVehicle',
+        source,
+        true
+    )
 end)
 
 lib.addCommand('paytow', {

@@ -19,5 +19,21 @@ function ImpoundWithPrice(price, body, engine, fuel, plate)
 end
 
 function ImpoundForever(body, engine, fuel, plate)
-    MySQL.query('UPDATE player_vehicles SET state = 2, body = ?, engine = ?, fuel = ? WHERE plate = ?', {body, engine, fuel, plate})
+    MySQL.update([[
+        UPDATE player_vehicles
+        SET
+            state = 2,
+            garage = ?,
+            depotprice = 0,
+            body = ?,
+            engine = ?,
+            fuel = ?
+        WHERE plate = ?
+    ]], {
+        'impoundlot',
+        body,
+        engine,
+        fuel,
+        plate
+    })
 end

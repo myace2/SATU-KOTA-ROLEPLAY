@@ -23,22 +23,25 @@ return {
         --     },
         -- Default GTA 5 Customs and Benny's Locations
         {
+            job = { 'mechanic' },
+
             hideBlip = false,
+
             blip = {
                 sprite = 72,
                 color = 3,
                 scale = 0.8,
-                label = 'Los Santos Customs - Vinewood',
+                label = 'SATU KOTA CUSTOMS',
             },
             points = {
-                vec3(-344.36, -121.92, 38.60),
-                vec3(-319.43, -130.65, 38.60),
-                vec3(-324.77, -147.93, 38.60),
-                vec3(-348.59, -139.1, 38.60),
+                vec3(1144.38, -801.96, 56.6),
+                vec3(1144.49, -796.44, 56.6),
+                vec3(1118.71, -796.17, 56.6),
+                vec3(1118.71, -801.79, 56.6),
             }
         },
         {
-            hideBlip = false,
+            hideBlip = true,
             blip = {
                 sprite = 72,
                 color = 3,
@@ -54,7 +57,7 @@ return {
             }
         },
         {
-            hideBlip = false,
+            hideBlip = true,
             blip = {
                 sprite = 72,
                 color = 3,
@@ -69,7 +72,7 @@ return {
             }
         },
         {
-            hideBlip = false,
+            hideBlip = true,
             blip = {
                 sprite = 72,
                 color = 3,
@@ -84,7 +87,7 @@ return {
             }
         },
         {
-            hideBlip = false,
+            hideBlip = true,
             blip = {
                 sprite = 72,
                 color = 3,
@@ -99,7 +102,7 @@ return {
             }
         },
         {
-            hideBlip = false,
+            hideBlip = true,
             blip = {
                 sprite = 72,
                 color = 3,

@@ -218,21 +218,16 @@ RegisterNetEvent('qb-tow:client:SpawnVehicle', function()
 end)
 
 RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
-    if PlayerJob.name == "tow" then
-        CreateElements()
-    end
+    PlayerJob = QBX.PlayerData.job
+    CreateElements()
 end)
 
 RegisterNetEvent('QBCore:Client:OnJobUpdate', function(JobInfo)
     PlayerJob = JobInfo
-
-    if PlayerJob.name == "tow" then
-        CreateElements()
-    end
 end)
 
 RegisterNetEvent('jobs:client:ToggleNpc', function()
-    if QBX.PlayerData.job.name == "tow" then
+    if QBX.PlayerData.job then
         if CurrentTow then
             exports.qbx_core:Notify(locale("error.finish_work"), "error")
             return
@@ -406,7 +401,6 @@ RegisterNetEvent('qb-tow:client:SpawnNPCVehicle', function()
 end)
 
 RegisterNetEvent('qb-tow:client:ShowMarker', function(active)
-    if PlayerJob.name ~= "tow" then return end
 
     showMarker = active
 end)

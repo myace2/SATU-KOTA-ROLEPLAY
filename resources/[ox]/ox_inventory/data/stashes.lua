@@ -36,4 +36,22 @@ return {
 		weight = 70000,
 		groups = {['ambulance'] = 0}
 	},
+	{
+		coords = vec3(-516.6, -210.98, 37.17),
+		target = {
+			loc = vec3(-515.6, -210.98, 38.17),
+			length = 0.6,
+			width = 1.8,
+			heading = 360,
+			minZ = 43.34,
+			maxZ = 44.74,
+			label = 'Open Goverment Stash'
+		},
+		name = 'govermentstash',
+		label = 'Open Goverment Stash',
+		owner = false,
+		slots = 250,
+		weight = 999000000,
+		groups = {['goverment'] = 0}
+	},
 }

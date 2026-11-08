@@ -43,7 +43,7 @@ end
 -- Command
 
 local function openScoreboard()
-    local players, cops, admins = lib.callback.await('qbx_scoreboard:server:getScoreboardData')
+    local players, staffCounts, admins = lib.callback.await('qbx_scoreboard:server:getScoreboardData')
     onDutyAdmins = admins
 
     SendNUIMessage({
@@ -51,7 +51,8 @@ local function openScoreboard()
         players = players,
         maxPlayers = config.maxPlayers,
         requiredCops = GlobalState.illegalActions,
-        currentCops = cops
+        currentCops = staffCounts.police,
+        staffCounts = staffCounts
     })
 
     isScoreboardOpen = true

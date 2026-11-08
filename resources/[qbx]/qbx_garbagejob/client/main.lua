@@ -25,7 +25,6 @@ local function setupClient()
     amountOfBags = 0
     garbageObject = nil
     endBlip = nil
-    if playerJob.name == 'garbage' then
         garbageBlip = AddBlipForCoord(sharedConfig.locations.main.coords.x, sharedConfig.locations.main.coords.y, sharedConfig.locations.main.coords.z)
         SetBlipSprite(garbageBlip, 318)
         SetBlipDisplay(garbageBlip, 4)
@@ -35,7 +34,6 @@ local function setupClient()
         BeginTextCommandSetBlipName('STRING')
         AddTextComponentSubstringPlayerName(sharedConfig.locations.main.label)
         EndTextCommandSetBlipName(garbageBlip)
-    end
 end
 
 local function garbageMenu()

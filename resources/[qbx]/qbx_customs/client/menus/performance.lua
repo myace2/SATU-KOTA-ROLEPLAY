@@ -1,6 +1,3 @@
-local originalMods = {}
-local originalTurbo
-local lastIndex
 local VehicleClass = require('client.enums.VehicleClass')
 local config = require 'config.client'
 local sharedConfig = require 'config.shared'
@@ -20,16 +17,20 @@ local function priceLabel(price)
     return table.concat(copy, ' | ')
 end
 
-local function performance()
+local function buildOptions()
     local options = {}
+    local originalMods = {}
+    local originalTurbo
 
     for _, mod in ipairs(config.mods) do
         local modCount = GetNumVehicleMods(vehicle, mod.id)
 
         if mod.category ~= 'performance'
-        or mod.enabled == false
-        or modCount == 0
-        then goto continue end
+            or mod.enabled == false
+            or modCount == 0
+        then
+            goto continue
+        end
 
         local modLabels = {}
         modLabels[1] = locale('menus.general.stock')
@@ -40,13 +41,22 @@ local function performance()
         local currentMod = GetVehicleMod(vehicle, mod.id)
         originalMods[mod.id] = currentMod
 
+        local prices = sharedConfig.prices[mod.id]
+        local selectedIndex = currentMod + 2
+
         options[#options + 1] = {
+            type = 'item',
+            icon = mod.icon or 'performance',
             id = mod.id,
+            payType = mod.id,
             label = mod.label,
-            description = priceLabel(sharedConfig.prices[mod.id]),
+            price = type(prices) == 'table'
+                and ('%s%s'):format(config.currency, prices[selectedIndex] or 0)
+                or priceLabel(prices),
+            prices = type(prices) == 'table' and prices or nil,
             values = modLabels,
-            close = true,
-            defaultIndex = currentMod + 2,
+            selected = selectedIndex,
+            defaultIndex = selectedIndex,
             set = function(index)
                 SetVehicleMod(vehicle, mod.id, index - 2, false)
                 return currentMod == index - 2, ('%s installed'):format(modLabels[index])
@@ -62,15 +72,21 @@ local function performance()
     originalTurbo = IsToggleModOn(vehicle, 18)
     if GetVehicleClass(vehicle) ~= VehicleClass.Cycles then
         options[#options + 1] = {
+            type = 'item',
+            icon = 'turbo',
             id = 18,
+            payType = 18,
             label = locale('menus.performance.turbo'),
-            description = ('%s%s'):format(config.currency, sharedConfig.prices[18]),
-            values = {locale('menus.general.disabled'), locale('menus.general.enabled')},
-            close = true,
+            price = ('%s%s'):format(config.currency, sharedConfig.prices[18]),
+            values = { locale('menus.general.disabled'), locale('menus.general.enabled') },
+            selected = originalTurbo and 2 or 1,
             defaultIndex = originalTurbo and 2 or 1,
             set = function(index)
                 ToggleVehicleMod(vehicle, 18, index == 2)
-                return originalTurbo == (index == 2), ('%s %s'):format(locale('menus.performance.turbo'), index == 2 and string.lower(locale('menus.general.enabled')) or string.lower(locale('menus.general.disabled')))
+                return originalTurbo == (index == 2), ('%s %s'):format(
+                    locale('menus.performance.turbo'),
+                    index == 2 and string.lower(locale('menus.general.enabled')) or string.lower(locale('menus.general.disabled'))
+                )
             end,
             restore = function()
                 ToggleVehicleMod(vehicle, 18, originalTurbo)
@@ -85,62 +101,21 @@ local function performance()
     return options
 end
 
-local menu = {
-    id = 'customs-performance',
-    title = locale('menus.performance.title'),
-    canClose = true,
-    disableInput = false,
-    options = {},
-    position = 'top-left',
-}
-
-local function onSubmit(selected, scrollIndex)
-    for _, v in pairs(menu.options) do
-        v.restore()
-    end
-
-    local duplicate, desc = menu.options[selected].set(scrollIndex)
-
-    local success = InstallMod(duplicate, menu.options[selected].id, {
-        description = desc,
-    }, scrollIndex)
-
-    if not success then menu.options[selected].restore() end
-
-    lib.setMenuOptions(menu.id, performance())
-    lib.showMenu(menu.id, lastIndex)
-end
-
-menu.onSideScroll = function(selected, scrollIndex)
-    PlaySoundFrontend(-1, 'NAV_UP_DOWN', 'HUD_FRONTEND_DEFAULT_SOUNDSET', true)
-    local option = menu.options[selected]
-    option.set(scrollIndex)
-end
-
-menu.onClose = function()
-    for _, v in pairs(menu.options) do
-        v.restore()
-    end
-    lib.showMenu(mainMenuId, mainLastIndex)
-end
-
-menu.onSelected = function(selected)
-    PlaySoundFrontend(-1, 'NAV_UP_DOWN', 'HUD_FRONTEND_DEFAULT_SOUNDSET', true)
-    lastIndex = selected
-end
-
 return function()
-    local options = performance()
+    local options = buildOptions()
 
     if #options == 0 then
-        exports.qbx_core:Notify(locale(
-            'notifications.inform.carNoPerformanceUpgrades'
-        ))
-
-        return mainMenuId
+        exports.qbx_core:Notify(locale('notifications.inform.carNoPerformanceUpgrades'))
+        return nil
     end
 
-    menu.options = options
-    lib.registerMenu(menu, onSubmit)
-    return menu.id
+    return {
+        id = 'performance',
+        title = locale('menus.performance.title'),
+        subtitle = 'Engine, brakes, transmission and more',
+        options = options,
+        rebuild = function()
+            return require('client.menus.performance')()
+        end,
+    }
 end

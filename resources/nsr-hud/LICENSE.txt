@@ -1,0 +1,24 @@
+================================================================================
+NSR HUD ULTIMATE (nsr-hud) — COMMERCIAL LICENSE & ASSET ATTRIBUTION
+Copyright (c) 2026 NSR Store. All Rights Reserved.
+================================================================================
+
+1. LICENSE GRANT
+This software package ("NSR HUD Ultimate") is licensed for commercial distribution
+via NSR Store on Tebex. Server owners who purchase a license may install, modify
+configuration files, and run this resource on their FiveM server instances.
+
+2. RESTRICTIONS
+- You may not resell, redistribute, leak, or rebrand this resource as your own
+  commercial product without explicit written authorization from NSR Store.
+- All Lua scripts, HTML/CSS/JS frontend code, and localization bundles are original
+  works created specifically for NSR HUD Ultimate.
+
+3. THIRD-PARTY ASSET ATTRIBUTION & OFFLINE COMPLIANCE
+- Icons (`html/assets/icons/*.svg`) and vector graphics (`html/assets/images/*.svg`):
+  100% original inline SVG vector paths created for NSR HUD Ultimate. Zero external
+  icon libraries or copyrighted brand logos are used.
+- Fonts: Uses standard operating system font stacks ('Segoe UI', 'Inter', 'Tahoma',
+  'Noto Sans Arabic', 'Consolas', monospace) with zero remote font server requests.
+- Audio: Uses native Web Audio API synthesis (`html/js/settings.js`) for UI click
+  feedback with zero external audio file dependencies.

@@ -1,7 +1,7 @@
 return {
     pawnLocation = {
         {
-            coords = vector3(412.34, 314.81, 103.13),
+            coords = vec3(1444.88, 6333.34, 22.88),
             size = vector3(1.5, 1.8, 2.0),
             heading = 207.0,
             debugPoly = false,

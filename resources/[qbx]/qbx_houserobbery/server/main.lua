@@ -7,6 +7,9 @@ local pickupOwners = {}
 local MIN_SEARCH_DURATION = 3500
 local SEARCH_TIMEOUT = 15000
 
+local globalCooldownUntil = 0
+local lockpickInProgress = false
+
 ---@param value any
 ---@return boolean
 local function isInteger(value)
@@ -221,41 +224,104 @@ end
 -- Triggers skillcheck callback on calling player before teleporting them inside
 ---@param playerSource number Player server Id
 ---@param isAdvanced boolean Is this an advanced lockpick
+
 AddEventHandler('lockpicks:UseLockpick', function(playerSource, isAdvanced)
     local player = exports.qbx_core:GetPlayer(playerSource)
     if not player then return end
 
+    -- Cegah dua proses pembobolan berjalan bersamaan
+    if lockpickInProgress then
+        exports.qbx_core:Notify(
+            playerSource,
+            'Sedang ada percobaan pembobolan. Coba lagi nanti.',
+            'error'
+        )
+        return
+    end
+
+    -- Periksa cooldown global
+    local remaining = globalCooldownUntil - os.time()
+
+    if remaining > 0 then
+        local minutes = math.ceil(remaining / 60)
+
+        exports.qbx_core:Notify(
+            playerSource,
+            ('House robbery sedang cooldown. Tunggu %d menit lagi.'):format(minutes),
+            'error'
+        )
+        return
+    end
+
     local playerCoords = GetEntityCoords(GetPlayerPed(playerSource))
     local closestHouseIndex = getClosestHouse(playerCoords)
-    local house = sharedConfig.houses[closestHouseIndex]
-    local amount = exports.qbx_core:GetDutyCountType('leo')
 
-    if not house then return end
-    if house.opened then return end
-    if not isAdvanced and not player.Functions.GetItemByName(config.requiredItems[2]) then return end
-    if amount < config.minimumPolice then
-        if config.notEnoughCopsNotify then
-            exports.qbx_core:Notify(playerSource, locale('notify.no_police', config.minimumPolice), 'error')
-            return
-        end
+    if not closestHouseIndex then return end
+
+    local house = sharedConfig.houses[closestHouseIndex]
+
+    if not house or house.opened then return end
+
+    -- Lockpick biasa membutuhkan screwdriver set
+    if not isAdvanced
+        and not player.Functions.GetItemByName(config.requiredItems[2]) then
+        exports.qbx_core:Notify(
+            playerSource,
+            'Kamu membutuhkan Screwdriver Set.',
+            'error'
+        )
+        return
     end
 
-    local result = lib.callback.await('qbx_houserobbery:client:checkTime', playerSource)
+    -- Tidak ada pemeriksaan jumlah polisi.
+    -- Tidak ada pemeriksaan jam operasional.
+    lockpickInProgress = true
 
-    if not result then return end
-
-    local skillcheck = lib.callback.await('qbx_houserobbery:client:startSkillcheck', playerSource, sharedConfig.interiors[house.interior].skillcheck)
+    local skillcheck = lib.callback.await(
+        'qbx_houserobbery:client:startSkillcheck',
+        playerSource,
+        sharedConfig.interiors[house.interior].skillcheck
+    )
 
     if skillcheck then
+        -- Aktifkan cooldown setelah berhasil membobol pintu
+        globalCooldownUntil = os.time() + config.globalCooldownSeconds
+
         sharedConfig.houses[closestHouseIndex].opened = true
-        exports.qbx_core:Notify(playerSource, locale('notify.success_skillcheck'), 'success')
-        TriggerClientEvent('qbx_houserobbery:client:syncconfig', -1, sharedConfig.houses[closestHouseIndex], closestHouseIndex)
-        enterHouse(playerSource, sharedConfig.interiors[house.interior].exit, house.routingbucket, closestHouseIndex)
+
+        exports.qbx_core:Notify(
+            playerSource,
+            'Berhasil membobol rumah! Segera cari barang berharga.',
+            'success'
+        )
+
+        TriggerClientEvent(
+            'qbx_houserobbery:client:syncconfig',
+            -1,
+            sharedConfig.houses[closestHouseIndex],
+            closestHouseIndex
+        )
+
+        enterHouse(
+            playerSource,
+            sharedConfig.interiors[house.interior].exit,
+            house.routingbucket,
+            closestHouseIndex
+        )
+
+        -- Laporan polisi tetap dikirim setelah jeda konfigurasi interior
         policeAlert(locale('notify.police_alert'), house.interior)
     else
-        exports.qbx_core:Notify(playerSource, locale('notify.fail_skillcheck'), 'error')
+        exports.qbx_core:Notify(
+            playerSource,
+            'Gagal membobol pintu rumah.',
+            'error'
+        )
     end
+
+    lockpickInProgress = false
 end)
+
 
 -- Teleports player inside house and sets routing bucket.
 ---@param index number House index number to locate in config

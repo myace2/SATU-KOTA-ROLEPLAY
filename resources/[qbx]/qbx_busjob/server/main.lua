@@ -27,7 +27,7 @@ end
 lib.callback.register('qbx_busjob:server:spawnBus', function(source, model)
     local player = exports.qbx_core:GetPlayer(source)
     local ped = GetPlayerPed(source)
-    if not player or player.PlayerData.job.name ~= 'bus' or ped == 0 or not isAllowedModel(model) then return end
+    if not player or ped == 0 or not isAllowedModel(model) then return end
     if #(GetEntityCoords(ped) - sharedConfig.location.xyz) > 7.5 then return end
 
     local activeBus = activeBuses[source]
@@ -62,7 +62,7 @@ RegisterNetEvent('qbx_busjob:server:NpcPay', function()
     local src = source
     local player = exports.qbx_core:GetPlayer(src)
     local ped = GetPlayerPed(src)
-    if not player or player.PlayerData.job.name ~= 'bus' or ped == 0 then return end
+    if not player or ped == 0 then return end
 
     local vehicle = GetVehiclePedIsIn(ped, false)
     if vehicle == 0 or GetPedInVehicleSeat(vehicle, -1) ~= ped then return end

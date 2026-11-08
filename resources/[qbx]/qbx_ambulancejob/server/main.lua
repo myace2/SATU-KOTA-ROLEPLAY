@@ -34,11 +34,11 @@ local function alertAmbulance(src, text)
 	end
 end
 
-local function registerArmory()
-	for _, armory in pairs(sharedConfig.locations.armory) do
-		exports.ox_inventory:RegisterShop(armory.shopType, armory)
-	end
-end
+-- local function registerArmory()
+-- 	for _, armory in pairs(sharedConfig.locations.armory) do
+-- 		exports.ox_inventory:RegisterShop(armory.shopType, armory)
+-- 	end
+-- end
 
 local function registerStashes()
     for _, stash in pairs(sharedConfig.locations.stash) do

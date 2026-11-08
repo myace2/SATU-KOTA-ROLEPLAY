@@ -153,24 +153,27 @@ local function displayVehicleInfo(vehicle, garageName, garageInfo, accessPoint)
         }
     }
 
-    if vehicle.state == VehicleState.OUT then
-        if garageInfo.type == GarageType.DEPOT then
-            options[#options + 1] = {
-                title = 'Take out',
-                icon = 'fa-truck-ramp-box',
-                description = ('$%s'):format(lib.math.groupdigits(vehicle.depotPrice)),
-                arrow = true,
-                onSelect = function()
-                    takeOutOfGarage(vehicle.id, garageName, accessPoint)
-                end,
-            }
-        else
-            options[#options + 1] = {
-                title = 'Your vehicle is already out...',
-                icon = VehicleType.CAR,
-                readOnly = true,
-            }
-        end
+    if garageInfo.type == GarageType.DEPOT and (vehicle.state == VehicleState.OUT or vehicle.state == VehicleState.IMPOUNDED) then
+        options[#options + 1] = {
+            title = 'Take out',
+            icon = 'fa-truck-ramp-box',
+            description = ('$%s'):format(lib.math.groupdigits(vehicle.depotPrice)),
+            arrow = true,
+            onSelect = function()
+                takeOutOfGarage(vehicle.id, garageName, accessPoint)
+                print('========== CLIENT TAKE OUT ==========')
+print('Vehicle ID:', vehicle.id)
+print('Plate:', vehicle.props and vehicle.props.plate)
+print('Model:', vehicle.modelName)
+print('====================================')
+            end,
+        }
+    elseif vehicle.state == VehicleState.OUT then
+        options[#options + 1] = {
+            title = 'Your vehicle is already out...',
+            icon = VehicleType.CAR,
+            readOnly = true,
+        }
     elseif vehicle.state == VehicleState.GARAGED then
         options[#options + 1] = {
             title = locale('menu.take_out'),

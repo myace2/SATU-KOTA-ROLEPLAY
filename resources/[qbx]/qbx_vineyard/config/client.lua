@@ -1,6 +1,6 @@
 return {
     debugPoly = false,
-    useBlips = true,
+    useBlips = false,
     locations = {
         vineyard = {
             coords = vec3(-1877.35, 2132.57, 127.93),

@@ -1,0 +1,115 @@
+/* ============================================================================
+   NSR HUD ULTIMATE — MASTER LAYOUT & RTL STYLES (html/css/main.css)
+   ============================================================================ */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
+html, body {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background: transparent !important;
+    font-family: var(--nsr-font-sans);
+    color: var(--nsr-text);
+    -webkit-font-smoothing: antialiased;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.hud-root {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 10;
+}
+
+/* Cinematic Letterbox Bars */
+.cinematic-overlay {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 5;
+}
+.cinematic-bar {
+    position: fixed;
+    left: 0;
+    width: 100vw;
+    height: 11vh;
+    background: #000000;
+    transition: transform 0.35s ease;
+}
+.cinematic-bar-top {
+    top: 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+.cinematic-bar-bottom {
+    bottom: 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Notification Toasts */
+.toast-container {
+    position: fixed;
+    top: 2.4vh;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    z-index: 9999;
+    pointer-events: none;
+}
+
+.nsr-toast {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 18px;
+    border-radius: var(--nsr-radius-md);
+    background: var(--nsr-surface-elevated);
+    border: 1px solid var(--nsr-border);
+    box-shadow: var(--nsr-shadow);
+    color: var(--nsr-text);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.2px;
+    animation: toastSlideIn 0.22s ease-out;
+}
+.nsr-toast.toast-success { border-inline-start: 4px solid var(--nsr-success); }
+.nsr-toast.toast-warning { border-inline-start: 4px solid var(--nsr-warning); }
+.nsr-toast.toast-error   { border-inline-start: 4px solid var(--nsr-danger); }
+.nsr-toast.toast-info    { border-inline-start: 4px solid var(--nsr-primary); }
+
+@keyframes toastSlideIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Right-To-Left (Arabic `Config.Locale = 'ar'`) Support */
+html[dir="rtl"] body,
+body.rtl-layout {
+    direction: rtl;
+    text-align: right;
+}
+
+body.rtl-layout .hud-widget-pill,
+body.rtl-layout .hud-widget-bar,
+body.rtl-layout .carplay-bezel,
+body.rtl-layout .editor-header,
+body.rtl-layout .editor-brand-row,
+body.rtl-layout .editor-footer,
+body.rtl-layout .editor-prop-row {
+    direction: rtl;
+}
+
+

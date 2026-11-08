@@ -65,10 +65,14 @@ RegisterNetEvent('qb-drugs:server:sellCornerDrugs', function()
     if player and offer and offer.expiresAt >= os.time()
         and exports.ox_inventory:GetItemCount(src, offer.item) >= offer.amount
         and exports.ox_inventory:RemoveItem(src, offer.item, offer.amount) then
-        exports.qbx_core:Notify(src, locale('success.offer_accepted'), 'success')
-        player.Functions.AddMoney('cash', offer.total, 'sold-cornerdrugs')
-        if config.policeCallChance >= math.random(1, 100) then
-            TriggerEvent('police:server:policeAlert', locale('info.possible_drug_dealing'), nil, src)
+        if exports.ox_inventory:AddItem(src, 'black_money', offer.total) then
+            exports.qbx_core:Notify(src, locale('success.offer_accepted'), 'success')
+            if config.policeCallChance >= math.random(1, 100) then
+                TriggerEvent('police:server:policeAlert', locale('info.possible_drug_dealing'), nil, src)
+            end
+        else
+            exports.ox_inventory:AddItem(src, offer.item, offer.amount)
+            exports.qbx_core:Notify(src, locale('error.item_unavailable'), 'error')
         end
     elseif player then
         TriggerClientEvent('qb-drugs:client:cornerselling', src)

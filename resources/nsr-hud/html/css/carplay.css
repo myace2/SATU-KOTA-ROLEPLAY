@@ -1,0 +1,234 @@
+/* ============================================================================
+   NSR HUD ULTIMATE — NSR CARPLAY INFOTAINMENT SYSTEM (html/css/carplay.css)
+   ============================================================================ */
+
+.carplay-modal {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(3, 6, 12, 0.45);
+    z-index: 200;
+}
+
+.carplay-bezel {
+    width: 860px;
+    height: 520px;
+    border-radius: 28px;
+    border: 3px solid rgba(255, 255, 255, 0.16);
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.75);
+    display: flex;
+    overflow: hidden;
+    color: var(--nsr-text);
+    transition: width 0.25s ease, height 0.25s ease, filter 0.2s ease;
+}
+
+.carplay-bezel.compact-mode {
+    width: 740px;
+    height: 450px;
+}
+
+/* Sidebar Dock */
+.carplay-dock {
+    width: 118px;
+    background: rgba(8, 11, 18, 0.92);
+    border-inline-end: 1px solid rgba(255, 255, 255, 0.10);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 14px 10px;
+    flex-shrink: 0;
+}
+
+.carplay-dock-top {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.carplay-brand-logo {
+    width: 82px;
+    height: auto;
+}
+
+.carplay-dock-clock {
+    font-family: var(--nsr-font-mono);
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--nsr-text);
+}
+
+.carplay-role-badge {
+    font-size: 9px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 99px;
+    background: rgba(0, 229, 255, 0.14);
+    color: var(--nsr-primary);
+    text-align: center;
+}
+
+.carplay-dock-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.carplay-dock-btn {
+    background: transparent;
+    border: 1px solid transparent;
+    color: var(--nsr-text-muted);
+    border-radius: 12px;
+    padding: 7px 6px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    cursor: pointer;
+    transition: all 0.18s ease;
+}
+.carplay-dock-btn:hover {
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--nsr-text);
+}
+.carplay-dock-btn.active {
+    background: rgba(0, 229, 255, 0.14);
+    border-color: var(--nsr-border);
+    color: var(--nsr-primary);
+}
+
+.dock-icon {
+    font-size: 16px;
+    line-height: 1;
+}
+.dock-label {
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.carplay-close-btn {
+    width: 100%;
+    padding: 8px;
+    border-radius: 10px;
+    border: 1px solid rgba(239, 68, 68, 0.35);
+    background: rgba(239, 68, 68, 0.14);
+    color: #FCA5A5;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+}
+.carplay-close-btn:hover {
+    background: rgba(239, 68, 68, 0.26);
+}
+
+/* Viewport & App Cards */
+.carplay-viewport {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.cp-app-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.10);
+    padding-bottom: 10px;
+}
+
+.cp-app-title {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--nsr-text);
+}
+.cp-app-subtitle {
+    font-size: 12px;
+    color: var(--nsr-text-muted);
+}
+
+.cp-grid-2 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+}
+
+.cp-grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+
+.cp-card {
+    background: rgba(14, 20, 34, 0.78);
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    border-radius: 16px;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.cp-card-title {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: var(--nsr-primary);
+}
+
+.cp-action-btn {
+    padding: 10px 12px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: var(--nsr-text);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: all 0.15s ease;
+}
+.cp-action-btn:hover:not(:disabled) {
+    border-color: var(--nsr-primary);
+    background: rgba(0, 229, 255, 0.12);
+}
+.cp-action-btn.active {
+    background: rgba(16, 185, 129, 0.18);
+    border-color: var(--nsr-success);
+    color: #A7F3D0;
+}
+.cp-action-btn:disabled {
+    opacity: 0.42;
+    cursor: not-allowed;
+}
+
+.cp-station-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    max-height: 230px;
+    overflow-y: auto;
+}
+
+.cp-input-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.cp-input {
+    flex: 1;
+    padding: 9px 12px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    background: rgba(8, 12, 20, 0.85);
+    color: var(--nsr-text);
+    font-size: 13px;
+}

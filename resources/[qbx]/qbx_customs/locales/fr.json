@@ -13,17 +13,19 @@
         }
     },
     "dragCam": {
+        "orbit": "Orienter la caméra",
+        "zoom": "Zoom avant / arrière",
         "zoomIn": "Zoomer",
         "zoomOut": "Dézoomer",
         "toggleDoors": "Ouvrir/Fermer les portes",
-        "changeView": "Activer/Désactiver la vue à la première personne"
+        "changeView": "Vue à la première personne"
     },
     "textUI": {
         "tune": "Appuyez sur [E] pour personnaliser votre voiture"
     },
     "menus": {
         "main": {
-            "title": "Popcorn Customs",
+            "title": "RM-CUSTOMS",
             "repair": "Réparer",
             "performance": "Performance",
             "parts": "Cosmétiques - Pièces",

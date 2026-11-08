@@ -450,7 +450,6 @@ function setupTaxiParkingZone()
         rotation = 55,
         debug = config.debugPoly,
         inside = function()
-            if QBX.PlayerData.job.name ~= 'taxi' then return end
             if IsControlJustPressed(0, 38) then
                 if whitelistedVehicle() then
                     if meterIsOpen then
@@ -688,11 +687,11 @@ CreateThread(function()
 end)
 
 local function init()
-    if QBX.PlayerData.job.name == 'taxi' then
-        setupGarageZone()
-        setupTaxiParkingZone()
-        setLocationsBlip()
-    end
+    if not isLoggedIn then return end
+
+    setupGarageZone()
+    setupTaxiParkingZone()
+    setLocationsBlip()
 end
 
 RegisterNetEvent('QBCore:Client:OnJobUpdate', function()
@@ -701,9 +700,10 @@ RegisterNetEvent('QBCore:Client:OnJobUpdate', function()
     init()
 end)
 
-RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
-    isLoggedIn = true
-    init()
+RegisterNetEvent('QBCore:Client:OnPlayerUnload', function()
+    isLoggedIn = false
+    destroyGarageZone()
+    destroyTaxiParkingZone()
 end)
 
 RegisterNetEvent('QBCore:Client:OnPlayerUnload', function()

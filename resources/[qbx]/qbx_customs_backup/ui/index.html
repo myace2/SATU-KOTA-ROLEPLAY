@@ -1,0 +1,169 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vehicle Customs</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="app" class="hidden">
+
+        <main class="customs-container">
+
+            <!-- HEADER -->
+            <header class="header">
+                <div class="brand">
+                    <div class="brand-icon">
+                        <i class="icon">◆</i>
+                    </div>
+
+                    <div class="brand-info">
+                        <h1>VEHICLE <span>CUSTOMS</span></h1>
+                        <p>PREMIUM VEHICLE WORKSHOP</p>
+                    </div>
+                </div>
+
+                <button id="closeBtn" class="close-btn" aria-label="Tutup menu">
+                    ✕
+                </button>
+            </header>
+
+            <!-- CONTENT -->
+            <section class="content">
+
+                <!-- SIDEBAR -->
+                <aside class="sidebar">
+                    <div class="sidebar-heading">
+                        <span>WORKSHOP MENU</span>
+                    </div>
+
+                    <nav class="category-list">
+
+                        <button class="category-btn active" data-category="performance">
+                            <span class="category-icon">⚙</span>
+                            <span class="category-label">
+                                <strong>Performance</strong>
+                                <small>Engine & handling upgrades</small>
+                            </span>
+                            <span class="category-arrow">›</span>
+                        </button>
+
+                        <button class="category-btn" data-category="parts">
+                            <span class="category-icon">◈</span>
+                            <span class="category-label">
+                                <strong>Parts</strong>
+                                <small>Vehicle components</small>
+                            </span>
+                            <span class="category-arrow">›</span>
+                        </button>
+
+                        <button class="category-btn" data-category="colors">
+                            <span class="category-icon">◉</span>
+                            <span class="category-label">
+                                <strong>Colors</strong>
+                                <small>Paint & visual customization</small>
+                            </span>
+                            <span class="category-arrow">›</span>
+                        </button>
+
+                        <button class="category-btn" data-category="extras">
+                            <span class="category-icon">✦</span>
+                            <span class="category-label">
+                                <strong>Extras</strong>
+                                <small>Additional accessories</small>
+                            </span>
+                            <span class="category-arrow">›</span>
+                        </button>
+
+                        <button class="category-btn repair-category" data-category="repair">
+                            <span class="category-icon">🔧</span>
+                            <span class="category-label">
+                                <strong>Repair Vehicle</strong>
+                                <small>Restore vehicle condition</small>
+                            </span>
+                            <span class="category-arrow">›</span>
+                        </button>
+
+                    </nav>
+
+                    <div class="sidebar-footer">
+                        <span class="status-dot"></span>
+                        <span>WORKSHOP SYSTEM ONLINE</span>
+                    </div>
+                </aside>
+
+                <!-- MAIN PANEL -->
+                <section class="main-panel">
+
+                    <div class="panel-header">
+                        <div>
+                            <span class="section-label">CUSTOMIZATION</span>
+                            <h2 id="categoryTitle">Performance Upgrade</h2>
+                            <p id="categoryDescription">
+                                Improve your vehicle's performance and driving experience.
+                            </p>
+                        </div>
+
+                        <div class="vehicle-status">
+                            <span class="status-dot"></span>
+                            <span>VEHICLE CONNECTED</span>
+                        </div>
+                    </div>
+
+                    <!-- CATEGORY CONTENT -->
+                    <div id="categoryContent" class="category-content">
+
+                        <div class="empty-state">
+                            <div class="empty-icon">⚙</div>
+                            <h3>Select an Upgrade</h3>
+                            <p>
+                                Choose a category from the sidebar to customize your vehicle.
+                            </p>
+                        </div>
+
+                    </div>
+
+                    <!-- SUBMENU CONTENT -->
+                    <div id="submenuContent" class="submenu-content hidden">
+                        <div class="submenu-header">
+                            <button id="backBtn" class="back-btn">
+                                ← Back
+                            </button>
+
+                            <div>
+                                <span class="section-label">CUSTOMIZATION OPTIONS</span>
+                                <h2 id="submenuTitle">Performance</h2>
+                            </div>
+                        </div>
+
+                        <div id="optionList" class="option-list"></div>
+                    </div>
+
+                    <!-- FOOTER -->
+                    <footer class="panel-footer">
+                        <div class="footer-info">
+                            <span class="footer-indicator"></span>
+                            <span>Changes are previewed on your vehicle</span>
+                        </div>
+
+                        <div class="footer-controls">
+                            <span>ESC</span>
+                            <small>TO CLOSE</small>
+                        </div>
+                    </footer>
+
+                </section>
+
+            </section>
+
+        </main>
+
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

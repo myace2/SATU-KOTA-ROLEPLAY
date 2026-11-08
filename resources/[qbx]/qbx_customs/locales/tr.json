@@ -13,17 +13,19 @@
     }
   },
   "dragCam": {
+    "orbit": "Kamerayı döndür",
+    "zoom": "Yakınlaştır / uzaklaştır",
     "zoomIn": "Yakınlaştırmayı arttır",
     "zoomOut": "Yakınlaştırmayı azalt",
     "toggleDoors": "Kapıları aç/kapa",
-    "changeView": "Birinci şahıs görünümünü aç/kapa"
+    "changeView": "Birinci şahıs görünüm"
   },
   "textUI": {
     "tune": "[E]'ye basarak arabanı ayarla"
   },
   "menus": {
     "main": {
-      "title": "Popcorn Customs",
+      "title": "RM-CUSTOMS",
       "repair": "Tamir",
       "performance": "Performans",
       "parts": "Kosmetik - Parçalar",

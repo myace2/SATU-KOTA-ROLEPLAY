@@ -15,6 +15,10 @@ window.addEventListener("message", (event) => {
 const Open = (data) => {
   $(".scoreboard-block").fadeIn(150);
   $("#total-players").html("<p>" + data.players + " of " + data.maxPlayers + "</p>");
+  $("#police-count").text(data.staffCounts.police);
+  $("#medic-count").text(data.staffCounts.medic);
+  $("#mechanic-count").text(data.staffCounts.mechanic);
+  $("#government-count").text(data.staffCounts.government);
 
   $.each(data.requiredCops, (i, category) => {
     var beam = $(".scoreboard-info").find('[data-type="' + i + '"]');
@@ -43,6 +47,20 @@ const Setup = (data) => {
             <p>${value}</p>
         </div>
         <div class="info-beam-status"></div>
+      </div>
+    `;
+  });
+  const staffRows = [
+    ["police", "Police On Duty"],
+    ["medic", "Medic On Duty"],
+    ["mechanic", "Mechanic On Duty"],
+    ["government", "Government On Duty"]
+  ];
+  staffRows.forEach(([key, label]) => {
+    scoreboardHtml += `
+      <div class="scoreboard-info-beam">
+        <div class="info-beam-title"><p>${label}</p></div>
+        <div class="info-beam-status staff-count" id="${key}-count">0</div>
       </div>
     `;
   });

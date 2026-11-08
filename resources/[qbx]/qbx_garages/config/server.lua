@@ -52,22 +52,22 @@ return {
     garages = {
         -- Public Garages
         motelgarage = {
-            label = 'Motel Parking',
+            label = 'Garasi Kota',
             vehicleType = VehicleType.CAR,
             accessPoints = {
                 {
                     blip = {
-                        name = 'Public Parking',
+                        name = 'Garasi Kota',
                         sprite = 357,
                         color = 3,
                     },
-                    coords = vec4(275.58, -344.74, 45.17, 70.0),
-                    spawn = vec4(271.26, -342.32, 44.7, 159.97),
+                    coords = vec4(-322.19, -893.57, 31.07, 339.25),
+                    spawn = vec4(-319.19, -893.57, 31.07, 339.25),
                 }
             },
         },
         sapcounsel = {
-            label = 'San Andreas Parking',
+            label = 'Garasi RS',
             vehicleType = VehicleType.CAR,
             accessPoints = {
                 {
@@ -433,7 +433,9 @@ return {
         impoundlot = {
             label = 'Impound Lot',
             type = GarageType.DEPOT,
-            states = { VehicleState.OUT, VehicleState.IMPOUNDED },
+            states = { 
+                    VehicleState.OUT,
+                    VehicleState.IMPOUNDED },
             skipGarageCheck = true,
             vehicleType = VehicleType.CAR,
             accessPoints = {

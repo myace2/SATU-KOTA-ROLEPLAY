@@ -24,10 +24,10 @@ return {
             ['ambulance'] = 'Ambulance',
         },
         [3] = { -- Grade 3
-            ['ambulance'] = 'Ambulance',
+            ['qrv'] = 'Ford',
         },
         [4] = { -- Grade 4
-            ['ambulance'] = 'Ambulance',
+            ['dodgeEMS'] = 'Dodge',
         },
     },
 

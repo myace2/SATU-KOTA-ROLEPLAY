@@ -112,6 +112,7 @@ return {
             policet = 'Police Car 6',
             sheriff = 'Sheriff Car 1',
             sheriff2 = 'Sheriff Car 2',
+            politalirsx = 'hot pursuit car',
         },
     },
 

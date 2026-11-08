@@ -4,16 +4,13 @@ return {
 
     locations = { -- Various interaction points
         duty = {
-            vec3(311.18, -599.25, 43.29),
-            vec3(-254.88, 6324.5, 32.58),
+            vec3(1137.42, -1546.41, 35.38),
         },
         vehicle = {
-            vec4(294.578, -574.761, 43.179, 35.79),
-            vec4(-234.28, 6329.16, 32.15, 222.5),
+            vec4(1122.64, -1512.02, 34.69, 282.28),
         },
         helicopter = {
-            vec4(351.58, -587.45, 74.16, 160.5),
-            vec4(-475.43, 5988.353, 31.716, 31.34),
+            vec4(1185.07, -1540.57, 39.4, 340.92),
         },
         armory = {
             {
@@ -29,7 +26,7 @@ return {
                     { name = 'weapon_fireextinguisher', price = 0 },
                 },
                 locations = {
-                    vec3(309.93, -602.94, 43.29)
+                    vec3(1150.43, -1554.99, 35.38)
                 }
             }
         },
@@ -47,7 +44,7 @@ return {
                 slots = 30,
                 groups = { ambulance = 0 },
                 owner = true, -- Set to false for group stash
-                location = vec3(309.78, -596.6, 43.29)
+                location = vec3(1135.39, -1540.72, 35.38)
             }
         },
 
@@ -59,10 +56,10 @@ return {
         hospitals = {
             pillbox = {
                 coords = vec3(350, -580, 43),
-                checkIn = vec3(308.19, -595.35, 43.29),
+                checkIn = vec3(1128.7, -1577.36, 35.38),
                 beds = {
-                    {coords = vec4(353.1, -584.6, 43.11, 152.08), model = 1631638868},
-                    {coords = vec4(356.79, -585.86, 43.11, 152.08), model = 1631638868},
+                    {coords = vec4(1132.81, -1580.04, 35.3, 356.61), model = 1631638868},
+                    {coords = vec4(1126.27, -1580.59, 35.3, 268.76), model = 1631638868},
                     {coords = vec4(354.12, -593.12, 43.1, 336.32), model = 2117668672},
                     {coords = vec4(350.79, -591.8, 43.1, 336.32), model = 2117668672},
                     {coords = vec4(346.99, -590.48, 43.1, 336.32), model = 2117668672},
@@ -92,7 +89,7 @@ return {
         },
 
         stations = {
-            {label = 'Pillbox Hospital', coords = vec4(304.27, -600.33, 43.28, 272.249)},
+            {label = 'Pillbox Hospital', coords = vec4(1139.76, -1542.22, 35.38, 253.92)},
         }
     },
 }
