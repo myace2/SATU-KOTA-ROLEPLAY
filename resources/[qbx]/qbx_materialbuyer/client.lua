@@ -2,27 +2,50 @@ local config = require 'config'
 local buyerPed
 
 local function openSellMenu()
+    local stock = lib.callback.await('qbx_materialbuyer:server:getStock', false)
+    if not stock then
+        lib.notify({
+            title = 'Material Buyer',
+            description = 'Tidak dapat mengambil data stok Government. Pastikan kamu berada di dekat NPC.',
+            type = 'error',
+        })
+        return
+    end
+
     local inventory = exports.ox_inventory:GetPlayerItems()
     local options = {}
 
     for _, item in pairs(inventory or {}) do
         local price = config.prices[item.name]
         local count = item.count or item.amount or 0
+        local itemStock = stock[item.name]
 
-        if price and count > 0 then
+        if price and count > 0 and itemStock then
+            local remaining = itemStock.remaining
+            local sellLimit = math.min(count, config.maxSellAmount, remaining)
+            local isFull = remaining <= 0
+
             options[#options + 1] = {
                 title = item.label or item.name,
-                description = ('Jumlah: %s | Harga satuan: $%s'):format(count, price),
-                icon = 'sack-dollar',
-                arrow = true,
+                description = ('Harga: $%s/unit | Stok Government: %s/%s%s'):format(
+                    price,
+                    itemStock.count,
+                    itemStock.limit,
+                    isFull and ' | PENUH' or (' | Sisa kapasitas: ' .. remaining)
+                ),
+                icon = isFull and 'ban' or 'sack-dollar',
+                arrow = not isFull,
+                disabled = isFull,
                 onSelect = function()
                     local input = lib.inputDialog('Jual Material', {
                         {
                             type = 'number',
                             label = ('Jumlah (tersedia: %s)'):format(count),
-                            description = ('Total maksimal: $%s'):format(count * price),
+                            description = ('Maksimal penjualan: %s | Total maksimal: $%s'):format(
+                                sellLimit, sellLimit * price
+                            ),
                             min = 1,
-                            max = math.min(count, config.maxSellAmount),
+                            max = sellLimit,
                             required = true,
                         }
                     })
