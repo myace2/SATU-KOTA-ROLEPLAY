@@ -58,3 +58,12 @@ The server validates the item allowlist, integer quantity, maximum quantity, pla
 - Civilians and other jobs are denied.
 - The server console can also run `materialhistory`.
 - This command no longer relies on the `group.admin` ACE permission.
+
+
+## Government Material Dashboard
+
+- Government job members (job name exactly `goverment`) can use `/materialdashboard`.
+- Shows current stock in `govermentstash` for each configured material, remaining capacity up to 10,000, and configured purchase price.
+- Shows today's transaction count, total quantity purchased, total cash paid, and per-material purchase totals.
+- Access is validated server-side. Civilians and other jobs are denied.
+- Daily totals use the MySQL server's `CURDATE()` timezone.
