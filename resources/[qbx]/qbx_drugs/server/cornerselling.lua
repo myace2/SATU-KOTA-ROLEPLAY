@@ -3,6 +3,19 @@ local cornerOffers = {}
 local stolenItems = {}
 local cornerLocks = {}
 
+-- Semua gang boleh melakukan corner selling, tetapi player tanpa gang tidak boleh.
+local function isGangMember(source)
+    local player = exports.qbx_core:GetPlayer(source)
+    if not player then return false end
+
+    local gangName = player.PlayerData.gang and player.PlayerData.gang.name
+    return type(gangName) == 'string' and gangName ~= '' and gangName:lower() ~= 'none'
+end
+
+local function notifyGangRequired(source)
+    exports.qbx_core:Notify(source, 'Corner Selling hanya dapat digunakan oleh anggota gang.', 'error')
+end
+
 local function getAvailableDrugs(source)
     local availableDrugs = {}
     local player = exports.qbx_core:GetPlayer(source)
@@ -24,6 +37,11 @@ local function getAvailableDrugs(source)
 end
 
 lib.callback.register('qb-drugs:server:getDrugOffer', function(source)
+    if not isGangMember(source) then
+        notifyGangRequired(source)
+        return nil
+    end
+
     local player = exports.qbx_core:GetPlayer(source)
     if not player then return nil end
     local availableDrugs = getAvailableDrugs(player.PlayerData.source)
@@ -47,6 +65,12 @@ end)
 
 RegisterNetEvent('qb-drugs:server:giveStealItems', function()
     local src = source
+    if not isGangMember(src) then
+        stolenItems[src] = nil
+        notifyGangRequired(src)
+        return
+    end
+
     local stolen = stolenItems[src]
     stolenItems[src] = nil
     if not stolen or stolen.expiresAt < os.time() then return end
@@ -56,6 +80,11 @@ end)
 
 RegisterNetEvent('qb-drugs:server:sellCornerDrugs', function()
     local src = source
+    if not isGangMember(src) then
+        cornerOffers[src] = nil
+        notifyGangRequired(src)
+        return
+    end
     if cornerLocks[src] then return end
     cornerLocks[src] = true
 
@@ -83,6 +112,11 @@ end)
 
 RegisterNetEvent('qb-drugs:server:robCornerDrugs', function()
     local src = source
+    if not isGangMember(src) then
+        cornerOffers[src] = nil
+        notifyGangRequired(src)
+        return
+    end
     if cornerLocks[src] then return end
     cornerLocks[src] = true
 
