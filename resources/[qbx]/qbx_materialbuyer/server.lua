@@ -1,6 +1,7 @@
 local config = require 'config'
 
 local GOVERNMENT_STASH = 'govermentstash'
+local MAX_STASH_ITEM_COUNT = 10000 -- Maximum quantity for each material in Government stash.
 
 local function isNearBuyer(src)
     local ped = GetPlayerPed(src)
@@ -29,6 +30,23 @@ RegisterNetEvent('qbx_materialbuyer:server:sellItem', function(itemName, amount)
 
     local player = exports.qbx_core:GetPlayer(src)
     if not player then return end
+
+    -- Enforce a separate 10,000-item limit for each material in Government stash.
+    local currentAmount = exports.ox_inventory:GetItemCount(GOVERNMENT_STASH, itemName)
+    if currentAmount + amount > MAX_STASH_ITEM_COUNT then
+        local remaining = math.max(0, MAX_STASH_ITEM_COUNT - currentAmount)
+        local itemData = exports.ox_inventory:Items(itemName)
+        local itemLabel = itemData and itemData.label or itemName
+
+        exports.qbx_core:Notify(
+            src,
+            remaining > 0
+                and ('Stok %s di Stash Government hampir penuh. Sisa kapasitas hanya %s item. Kurangi jumlah penjualan.'):format(itemLabel, remaining)
+                or ('Stok %s di Stash Government sudah mencapai batas 10.000 item.'):format(itemLabel),
+            'error'
+        )
+        return
+    end
 
     -- Remove the material from the player first.
     local removed = exports.ox_inventory:RemoveItem(src, itemName, amount)
