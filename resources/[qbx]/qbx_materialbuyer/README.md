@@ -20,8 +20,9 @@ Standalone material-selling point for Qbox + ox_inventory + ox_target.
 
 Edit `config.lua`:
 
-- `location.coords`: ox_target sale-zone position.
-- `location.size`: interaction-zone size.
+- `location.coords`: NPC position and server-side sale validation.
+- `location.heading`: NPC direction.
+- `location.pedModel`: NPC model.
 - `prices`: cash price per item.
 - `maxSellAmount`: maximum items per transaction.
 - `blip`: map marker settings.
