@@ -227,3 +227,66 @@ lib.addCommand('materialhistory', {
 
     TriggerClientEvent('qbx_materialbuyer:client:showHistory', source, rows)
 end)
+
+
+-- Government-only dashboard with live stash stock and today's purchase totals.
+lib.addCommand('materialdashboard', {
+    help = 'Buka dashboard stok dan pembelian material Government',
+}, function(source)
+    if source == 0 then
+        print('[qbx_materialbuyer] Dashboard hanya dapat dibuka oleh player dengan job goverment.')
+        return
+    end
+
+    local player = exports.qbx_core:GetPlayer(source)
+    local jobName = player and player.PlayerData.job and player.PlayerData.job.name
+    if jobName ~= 'goverment' then
+        exports.qbx_core:Notify(source, 'Kamu tidak memiliki akses ke Government Material Dashboard.', 'error')
+        return
+    end
+
+    local stock = {}
+    for itemName, unitPrice in pairs(config.prices) do
+        local itemData = exports.ox_inventory:Items(itemName)
+        local count = getStashCount(itemName)
+        stock[#stock + 1] = {
+            name = itemName,
+            label = itemData and itemData.label or itemName,
+            count = count,
+            remaining = math.max(0, MAX_STASH_ITEM_COUNT - count),
+            unitPrice = unitPrice,
+        }
+    end
+    table.sort(stock, function(a, b) return a.label < b.label end)
+
+    local ok, stats = pcall(function()
+        return MySQL.single.await(([=[
+            SELECT
+                COUNT(*) AS transaction_count,
+                COALESCE(SUM(amount), 0) AS total_items,
+                COALESCE(SUM(total_price), 0) AS total_spent
+            FROM `%s`
+            WHERE created_at >= CURDATE() AND created_at < CURDATE() + INTERVAL 1 DAY
+        ]=]):format(HISTORY_TABLE)) or { transaction_count = 0, total_items = 0, total_spent = 0 }
+    end)
+
+    if not ok then
+        print(('[qbx_materialbuyer] Failed to load dashboard stats: %s'):format(tostring(stats)))
+        exports.qbx_core:Notify(source, 'Dashboard gagal dimuat. Periksa koneksi database.', 'error')
+        return
+    end
+
+    local byMaterial = MySQL.query.await(([=[
+        SELECT item_name, item_label, SUM(amount) AS amount, SUM(total_price) AS total_price
+        FROM `%s`
+        WHERE created_at >= CURDATE() AND created_at < CURDATE() + INTERVAL 1 DAY
+        GROUP BY item_name, item_label
+        ORDER BY item_label ASC
+    ]=]):format(HISTORY_TABLE)) or {}
+
+    TriggerClientEvent('qbx_materialbuyer:client:showDashboard', source, {
+        stock = stock,
+        stats = stats,
+        byMaterial = byMaterial,
+    })
+end)
