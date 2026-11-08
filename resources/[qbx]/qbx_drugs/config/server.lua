@@ -140,6 +140,18 @@ return {
             max = 40,
         },
     },
+    cornerSelling = {
+        npcResponse = { offerChance = 70, declineChance = 20, robberyChance = 10 },
+        policeHeat = { baseChance = 5, increasePerSale = 5, maxChance = 60, decaySeconds = 300 },
+        defaultZone = { name = 'Kawasan Umum', priceMultiplier = 1.0, demandMultiplier = 1.0, policeMultiplier = 1.0 },
+        zones = {
+            { name = 'Davis', coords = { x = 100.0, y = -1940.0, z = 20.0 }, radius = 650.0, priceMultiplier = 1.10, demandMultiplier = 1.20, policeMultiplier = 1.15 },
+            { name = 'Vespucci', coords = { x = -1100.0, y = -1350.0, z = 5.0 }, radius = 700.0, priceMultiplier = 1.15, demandMultiplier = 1.25, policeMultiplier = 1.10 },
+            { name = 'Vinewood', coords = { x = 300.0, y = 300.0, z = 104.0 }, radius = 850.0, priceMultiplier = 1.20, demandMultiplier = 1.10, policeMultiplier = 1.25 },
+            { name = 'Sandy Shores', coords = { x = 1850.0, y = 3700.0, z = 33.0 }, radius = 900.0, priceMultiplier = 0.95, demandMultiplier = 0.90, policeMultiplier = 0.75 },
+            { name = 'Paleto Bay', coords = { x = -100.0, y = 6300.0, z = 31.0 }, radius = 850.0, priceMultiplier = 1.05, demandMultiplier = 0.95, policeMultiplier = 0.70 },
+        },
+    },
     scamChance = 25,
     policeCallChance = 15,
     deliveryRepGain = 1,
