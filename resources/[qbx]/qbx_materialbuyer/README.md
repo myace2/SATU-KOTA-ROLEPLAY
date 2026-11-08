@@ -40,3 +40,12 @@ Default sale prices:
 - glass: $4
 
 The server validates the item allowlist, integer quantity, maximum quantity, player proximity, and inventory removal before paying cash.
+
+
+## Transaction history
+
+- The resource creates the `qbx_materialbuyer_history` table automatically on startup through oxmysql.
+- Successful sales are logged with player name, server ID, citizen ID, item, quantity, unit price, total cash, and timestamp.
+- Admins can view the latest 25 entries with `/materialhistory`.
+- The command is restricted to the `group.admin` ACE principal. Ensure your server's admin principals inherit `group.admin`.
+- The server console can also run `materialhistory` to print the latest 25 entries.
