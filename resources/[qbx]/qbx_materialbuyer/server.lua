@@ -2,6 +2,7 @@ local config = require 'config'
 
 local GOVERNMENT_STASH = 'govermentstash'
 local MAX_STASH_ITEM_COUNT = 10000
+local HISTORY_TABLE = 'qbx_materialbuyer_history'
 local itemLocks = {}
 
 local function isNearBuyer(src)
@@ -14,6 +15,67 @@ end
 
 local function getStashCount(itemName)
     return exports.ox_inventory:GetItemCount(GOVERNMENT_STASH, itemName) or 0
+end
+
+local function createHistoryTable()
+    MySQL.query.await(([[
+        CREATE TABLE IF NOT EXISTS `%s` (
+            `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+            `player_id` INT NOT NULL,
+            `citizenid` VARCHAR(50) NOT NULL,
+            `player_name` VARCHAR(100) NOT NULL,
+            `item_name` VARCHAR(100) NOT NULL,
+            `item_label` VARCHAR(100) NOT NULL,
+            `amount` INT UNSIGNED NOT NULL,
+            `unit_price` INT UNSIGNED NOT NULL,
+            `total_price` BIGINT UNSIGNED NOT NULL,
+            `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            PRIMARY KEY (`id`),
+            INDEX `idx_created_at` (`created_at`),
+            INDEX `idx_citizenid` (`citizenid`),
+            INDEX `idx_item_name` (`item_name`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+    ]]):format(HISTORY_TABLE))
+end
+
+CreateThread(function()
+    local ok, err = pcall(createHistoryTable)
+    if not ok then
+        print(('[qbx_materialbuyer] Failed to create transaction history table: %s'):format(tostring(err)))
+    else
+        print(('[qbx_materialbuyer] Transaction history table %s is ready.'):format(HISTORY_TABLE))
+    end
+end)
+
+local function saveTransaction(src, player, itemName, itemLabel, amount, unitPrice, totalPrice)
+    local charinfo = player.PlayerData.charinfo or {}
+    local firstName = charinfo.firstname or ''
+    local lastName = charinfo.lastname or ''
+    local characterName = (firstName .. ' ' .. lastName):gsub('^%s*(.-)%s*$', '%1')
+
+    if characterName == '' then
+        characterName = GetPlayerName(src) or ('Player %s'):format(src)
+    end
+
+    local ok, result = pcall(function()
+        return MySQL.insert.await(
+            ('INSERT INTO `%s` (player_id, citizenid, player_name, item_name, item_label, amount, unit_price, total_price) VALUES (?, ?, ?, ?, ?, ?, ?, ?)'):format(HISTORY_TABLE),
+            {
+                src,
+                player.PlayerData.citizenid or 'unknown',
+                characterName,
+                itemName,
+                itemLabel,
+                amount,
+                unitPrice,
+                totalPrice,
+            }
+        )
+    end)
+
+    if not ok then
+        print(('[qbx_materialbuyer] Could not save transaction history for player %s: %s'):format(src, tostring(result)))
+    end
 end
 
 -- Client requests current Government stock when opening the buyer menu.
@@ -104,6 +166,7 @@ RegisterNetEvent('qbx_materialbuyer:server:sellItem', function(itemName, amount)
 
         local itemData = exports.ox_inventory:Items(itemName)
         local itemLabel = itemData and itemData.label or itemName
+        saveTransaction(src, player, itemName, itemLabel, amount, unitPrice, totalPrice)
 
         exports.qbx_core:Notify(
             src,
@@ -120,4 +183,27 @@ RegisterNetEvent('qbx_materialbuyer:server:sellItem', function(itemName, amount)
         print(('[qbx_materialbuyer] Sale error for player %s, item %s: %s'):format(src, itemName, tostring(err)))
         exports.qbx_core:Notify(src, 'Terjadi kesalahan saat memproses transaksi. Hubungi staff jika material terpotong.', 'error')
     end
+end)
+
+-- Admin-only command. Access is controlled by the group.admin ACE principal.
+lib.addCommand('materialhistory', {
+    help = 'Lihat 25 transaksi Material Buyer terbaru',
+    restricted = 'group.admin',
+}, function(source)
+    local rows = MySQL.query.await(
+        ('SELECT id, player_id, citizenid, player_name, item_name, item_label, amount, unit_price, total_price, DATE_FORMAT(created_at, "%%d-%%m-%%Y %%H:%%i:%%s") AS created_at FROM `%s` ORDER BY id DESC LIMIT 25'):format(HISTORY_TABLE)
+    ) or {}
+
+    if source == 0 then
+        print(('[qbx_materialbuyer] Found %s recent transactions.'):format(#rows))
+        for i = 1, #rows do
+            local row = rows[i]
+            print(('#%s | %s (ID %s) | %sx %s | $%s | %s'):format(
+                row.id, row.player_name, row.player_id, row.amount, row.item_label, row.total_price, row.created_at
+            ))
+        end
+        return
+    end
+
+    TriggerClientEvent('qbx_materialbuyer:client:showHistory', source, rows)
 end)
