@@ -49,3 +49,12 @@ The server validates the item allowlist, integer quantity, maximum quantity, pla
 - Admins can view the latest 25 entries with `/materialhistory`.
 - The command is restricted to the `group.admin` ACE principal. Ensure your server's admin principals inherit `group.admin`.
 - The server console can also run `materialhistory` to print the latest 25 entries.
+
+
+### Access to transaction history
+
+- Use `/materialhistory` in-game.
+- Access is restricted server-side to players whose active job name is exactly `goverment`.
+- Civilians and other jobs are denied.
+- The server console can also run `materialhistory`.
+- This command no longer relies on the `group.admin` ACE permission.
