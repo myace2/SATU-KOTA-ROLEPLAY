@@ -185,14 +185,34 @@ RegisterNetEvent('qbx_materialbuyer:server:sellItem', function(itemName, amount)
     end
 end)
 
--- Admin-only command. Access is controlled by the group.admin ACE principal.
+-- Government job members and server console can view transaction history.
+-- Access is checked server-side; other jobs and civilians are denied.
 lib.addCommand('materialhistory', {
-    help = 'Lihat 25 transaksi Material Buyer terbaru',
-    restricted = 'group.admin',
+    help = 'Lihat 25 transaksi Material Buyer terbaru (khusus Government)',
 }, function(source)
-    local rows = MySQL.query.await(
-        ('SELECT id, player_id, citizenid, player_name, item_name, item_label, amount, unit_price, total_price, DATE_FORMAT(created_at, "%%d-%%m-%%Y %%H:%%i:%%s") AS created_at FROM `%s` ORDER BY id DESC LIMIT 25'):format(HISTORY_TABLE)
-    ) or {}
+    if source ~= 0 then
+        local player = exports.qbx_core:GetPlayer(source)
+        local jobName = player and player.PlayerData.job and player.PlayerData.job.name
+
+        if jobName ~= 'goverment' then
+            exports.qbx_core:Notify(source, 'Kamu tidak memiliki akses ke riwayat transaksi Government.', 'error')
+            return
+        end
+    end
+
+    local ok, rows = pcall(function()
+        return MySQL.query.await(
+            ('SELECT id, player_id, citizenid, player_name, item_name, item_label, amount, unit_price, total_price, DATE_FORMAT(created_at, "%%d-%%m-%%Y %%H:%%i:%%s") AS created_at FROM `%s` ORDER BY id DESC LIMIT 25'):format(HISTORY_TABLE)
+        ) or {}
+    end)
+
+    if not ok then
+        print(('[qbx_materialbuyer] Failed to fetch transaction history: %s'):format(tostring(rows)))
+        if source ~= 0 then
+            exports.qbx_core:Notify(source, 'Riwayat transaksi gagal dimuat. Hubungi administrator.', 'error')
+        end
+        return
+    end
 
     if source == 0 then
         print(('[qbx_materialbuyer] Found %s recent transactions.'):format(#rows))
