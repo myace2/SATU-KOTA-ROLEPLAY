@@ -1,5 +1,4 @@
 local config = require 'config.client'
-local cornerselling = false
 local hasTarget = false
 local lastPed = {}
 local stealingPed = nil
@@ -8,13 +7,6 @@ local currentOfferDrug = nil
 local CurrentCops = 0
 local textDrawn = false
 local zoneMade = false
-
-local function tooFarAway()
-    exports.qbx_core:Notify(locale('error.too_far_away'), 'error')
-    cornerselling = false
-    hasTarget = false
-    currentOfferDrug = nil
-end
 
 local function robberyPed()
     if config.useTarget then
@@ -113,6 +105,7 @@ local function sellToPed(ped)
     currentOfferDrug = lib.callback.await('qb-drugs:server:getDrugOffer', false)
 
     if currentOfferDrug == nil then
+        hasTarget = false
         exports.qbx_core:Notify(locale('error.no_drugs_left'), 'error')
         return
     end
@@ -160,7 +153,7 @@ local function sellToPed(ped)
                 robberyPed()
                 break
             else
-                if pedDist2 < 1.5 and cornerselling then
+                if pedDist2 < 1.5 then
                     if config.useTarget and not zoneMade then
                         zoneMade = true
                         local options = {
@@ -254,54 +247,38 @@ local function sellToPed(ped)
     end
 end
 
-local function toggleSelling()
-    if not cornerselling then
-        cornerselling = true
-        exports.qbx_core:Notify(locale('info.started_selling_drugs'))
-        local startLocation = GetEntityCoords(cache.ped)
-        CreateThread(function()
-            while cornerselling do
-                local coords = GetEntityCoords(cache.ped)
-                if not hasTarget then
-                    local closestPed = lib.getClosestPed(coords, 15.0)
-                    if closestPed ~= nil and not IsPedInAnyVehicle(closestPed, false) and GetPedType(closestPed) ~= 28 then
-                        sellToPed(closestPed)
-                    end
-                end
-                local startDist = #(startLocation - coords)
-                if startDist > 10 then
-                    tooFarAway()
-                end
-                Wait(0)
+-- Target NPC directly to offer a drug sale; no radial menu or selling toggle needed.
+exports.ox_target:addGlobalPed({
+    {
+        name = 'qbx_drugs_corner_sell',
+        icon = 'fas fa-hand-holding-dollar',
+        label = 'Tawarkan narkoba',
+        distance = 2.0,
+        canInteract = function(entity)
+            if hasTarget or not DoesEntityExist(entity) then return false end
+            if IsPedAPlayer(entity) or IsPedInAnyVehicle(entity, false) or IsPedDeadOrDying(entity, true) then
+                return false
             end
-        end)
-    else
-        stealingPed = nil
-        stealData = {}
-        cornerselling = false
-        exports.qbx_core:Notify(locale('info.stopped_selling_drugs'))
-    end
-end
+            if GetPedType(entity) == 28 then return false end
 
--- Events
-RegisterNetEvent('qb-drugs:client:cornerselling', function()
-    if CurrentCops >= config.minimumDrugSalePolice then
-        local hasDrugs = not not lib.callback.await('qb-drugs:server:getDrugOffer', false)
-        if hasDrugs then
-            toggleSelling()
-        else
-            exports.qbx_core:Notify(locale('error.has_no_drugs'), 'error')
-        end
-    else
-        exports.qbx_core:Notify(locale('error.not_enough_police', config.minimumDrugSalePolice), 'error')
-    end
-end)
+            for i = 1, #lastPed do
+                if lastPed[i] == entity then return false end
+            end
 
--- This is a debug to ensure it works
--- RegisterCommand('startSelling', function(source, args)
---     TriggerEvent('qb-drugs:client:cornerselling')
--- end)
+            return true
+        end,
+        onSelect = function(data)
+            if CurrentCops < config.minimumDrugSalePolice then
+                exports.qbx_core:Notify(locale('error.not_enough_police', config.minimumDrugSalePolice), 'error')
+                return
+            end
 
+            sellToPed(data.entity)
+        end,
+    },
+})
+
+-- Keep the police count updated for the target interaction.
 RegisterNetEvent('police:SetCopCount', function(amount)
     CurrentCops = amount
 end)
