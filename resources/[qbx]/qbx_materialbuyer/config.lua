@@ -1,7 +1,7 @@
 return {
     -- Default location: scrapyard area. Change coords to move the buyer.
     location = {
-        coords = vec3(2351.5, 3132.96, 48.2),
+        coords = vec3(-555.72, -228.45, 38.18),
         heading = 250.0,
         pedModel = 's_m_y_dockwork_01',
         distance = 2.0,
@@ -24,7 +24,7 @@ return {
 
     blip = {
         enabled = true,
-        coords = vec3(2351.5, 3132.96, 48.2),
+        coords = vec3(-555.72, -228.45, 37.18),
         sprite = 365,
         color = 5,
         scale = 0.75,
