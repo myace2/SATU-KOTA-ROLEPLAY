@@ -2,6 +2,38 @@ local config = require 'config.server'
 local cornerOffers = {}
 local stolenItems = {}
 local cornerLocks = {}
+local cornerHeat = {}
+
+local function getCornerZone(source)
+    local ped = GetPlayerPed(source)
+    if not ped or ped == 0 then return config.cornerSelling.defaultZone end
+    local coords = GetEntityCoords(ped)
+    for i = 1, #config.cornerSelling.zones do
+        local zone = config.cornerSelling.zones[i]
+        local dx, dy, dz = coords.x - zone.coords.x, coords.y - zone.coords.y, coords.z - zone.coords.z
+        if (dx * dx + dy * dy + dz * dz) <= (zone.radius * zone.radius) then return zone end
+    end
+    return config.cornerSelling.defaultZone
+end
+
+local function getHeat(source)
+    local heat = cornerHeat[source]
+    if not heat then return 0 end
+    local now = os.time()
+    local decaySteps = math.floor((now - heat.updatedAt) / config.cornerSelling.policeHeat.decaySeconds)
+    if decaySteps > 0 then
+        heat.value = math.max(0, heat.value - decaySteps)
+        heat.updatedAt = now
+    end
+    if heat.value == 0 then cornerHeat[source] = nil return 0 end
+    return heat.value
+end
+
+local function recordSaleHeat(source)
+    local value = getHeat(source) + 1
+    cornerHeat[source] = { value = value, updatedAt = os.time() }
+    return value
+end
 
 -- Semua gang boleh melakukan corner selling, tetapi player tanpa gang tidak boleh.
 local function isGangMember(source)
@@ -47,20 +79,29 @@ lib.callback.register('qb-drugs:server:getDrugOffer', function(source)
     local availableDrugs = getAvailableDrugs(player.PlayerData.source)
     if availableDrugs == nil then return nil end
 
+    local settings = config.cornerSelling
+    local zone = getCornerZone(source)
+    local responseRoll = math.random(1, 100)
+    if responseRoll > settings.npcResponse.offerChance + settings.npcResponse.declineChance then
+        return { response = 'rob', zone = zone.name }
+    elseif responseRoll > settings.npcResponse.offerChance then
+        return { response = 'decline', zone = zone.name }
+    end
+
     local randomDrug = math.random(1, #availableDrugs)
     local chosenDrug = availableDrugs[randomDrug]
-    local offeredAmount = math.random(1, chosenDrug.amount > 15 and 15 or chosenDrug.amount)
+    local maxAmount = math.max(1, math.floor(math.min(15, chosenDrug.amount) * (zone.demandMultiplier or 1.0)))
+    local offeredAmount = math.random(1, maxAmount)
     local basePrice = math.random(config.cornerSellingDrugsPrice[chosenDrug.item].min, config.cornerSellingDrugsPrice[chosenDrug.item].max)
-    local totalPrice = config.scamChance >= math.random(1, 100) and basePrice * offeredAmount or math.random(3, 10) * offeredAmount
+    local totalPrice = config.scamChance >= math.random(1, 100)
+        and math.floor(basePrice * offeredAmount * (zone.priceMultiplier or 1.0))
+        or math.floor(math.random(3, 10) * offeredAmount)
 
     cornerOffers[source] = {
-        item = chosenDrug.item,
-        amount = offeredAmount,
-        total = totalPrice,
-        expiresAt = os.time() + 60,
+        item = chosenDrug.item, amount = offeredAmount, total = totalPrice,
+        policeMultiplier = zone.policeMultiplier or 1.0, zone = zone.name, expiresAt = os.time() + 60,
     }
-
-    return { chosen = chosenDrug, idx = randomDrug, amount = offeredAmount, total = totalPrice }
+    return { response = 'offer', chosen = chosenDrug, idx = randomDrug, amount = offeredAmount, total = totalPrice, zone = zone.name }
 end)
 
 RegisterNetEvent('qb-drugs:server:giveStealItems', function()
@@ -96,7 +137,11 @@ RegisterNetEvent('qb-drugs:server:sellCornerDrugs', function()
         and exports.ox_inventory:RemoveItem(src, offer.item, offer.amount) then
         if exports.ox_inventory:AddItem(src, 'black_money', offer.total) then
             exports.qbx_core:Notify(src, locale('success.offer_accepted'), 'success')
-            if config.policeCallChance >= math.random(1, 100) then
+            local heat = recordSaleHeat(src)
+            local policeSettings = config.cornerSelling.policeHeat
+            local policeChance = math.min(policeSettings.maxChance,
+                (policeSettings.baseChance + (heat - 1) * policeSettings.increasePerSale) * (offer.policeMultiplier or 1.0))
+            if policeChance >= math.random(1, 100) then
                 TriggerEvent('police:server:policeAlert', locale('info.possible_drug_dealing'), nil, src)
             end
         else
@@ -139,4 +184,5 @@ AddEventHandler('playerDropped', function()
     cornerOffers[source] = nil
     stolenItems[source] = nil
     cornerLocks[source] = nil
+    cornerHeat[source] = nil
 end)
