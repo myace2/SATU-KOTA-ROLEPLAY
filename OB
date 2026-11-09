@@ -1,0 +1,52 @@
+[1mdiff --git a/resources/[qbx]/qbx_drugs/config/server.lua b/resources/[qbx]/qbx_drugs/config/server.lua[m
+[1mindex 78f0eb5..9f872f5 100644[m
+[1m--- a/resources/[qbx]/qbx_drugs/config/server.lua[m
+[1m+++ b/resources/[qbx]/qbx_drugs/config/server.lua[m
+[36m@@ -92,45 +92,15 @@[m [mreturn {[m
+         },[m
+     },[m
+     cornerSellingDrugsList = {[m
+[31m-        'weed_white-widow',[m
+[31m-        'weed_skunk',[m
+[31m-        'weed_purple-haze',[m
+[31m-        'weed_og-kush',[m
+[31m-        'weed_amnesia',[m
+[31m-        'weed_ak47',[m
+[31m-        'crack_baggy',[m
+[32m+[m[32m        'weed',[m
+         'cokebaggy',[m
+         'meth'[m
+     },[m
+     cornerSellingDrugsPrice = {[m
+[31m-        ['weed_white-widow'] = {[m
+[32m+[m[32m        ['joint'] = {[m
+             min = 15,[m
+             max = 24,[m
+         },[m
+[31m-        ['weed_og-kush'] = {[m
+[31m-            min = 15,[m
+[31m-            max = 28,[m
+[31m-        },[m
+[31m-        ['weed_skunk'] = {[m
+[31m-            min = 15,[m
+[31m-            max = 31,[m
+[31m-        },[m
+[31m-        ['weed_amnesia'] = {[m
+[31m-            min = 18,[m
+[31m-            max = 34,[m
+[31m-        },[m
+[31m-        ['weed_purple-haze'] = {[m
+[31m-            min = 18,[m
+[31m-            max = 37,[m
+[31m-        },[m
+[31m-        ['weed_ak47'] = {[m
+[31m-            min = 18,[m
+[31m-            max = 40,[m
+[31m-        },[m
+[31m-        ['crack_baggy'] = {[m
+[31m-            min = 18,[m
+[31m-            max = 34,[m
+[31m-        },[m
+         ['cokebaggy'] = {[m
+             min = 18,[m
+             max = 37,[m

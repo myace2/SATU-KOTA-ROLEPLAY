@@ -6,6 +6,6 @@ return {
     parked = 0.0, -- Density of parked vehicles
     vehicle = 0.0, -- Density of vehicles
     randomvehicles = 0.0, -- Density of random vehicles
-    peds = 0.1, -- Density of random peds (civilians, etc.)
+    peds = 0.2, -- Density of random peds (civilians, etc.)
     scenario = 0.0, -- Density of scenario peds (bikers, gangsters, etc.)
 }
