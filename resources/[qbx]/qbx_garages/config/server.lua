@@ -10,7 +10,8 @@ return {
     autoRespawn = false,   -- True == auto respawn cars that are outside into your garage on script restart, false == does not put them into your garage and players have to go to the impound
     warpInVehicle = true, -- If false, player will no longer warp into vehicle upon taking the vehicle out.
     doorsLocked = true, -- If true, the doors will be locked upon taking the vehicle out.
-    distanceCheck = 5.0, -- The distance that needs to bee clear to let the vehicle spawn, this prevents vehicles stacking on top of each other
+    distanceCheck = 5.0, -- Jarak minimum area spawn harus kosong agar kendaraan tidak bertumpuk.
+    defaultGarageSlots = 10, -- Kapasitas kendaraan tersimpan per pemain pada setiap garasi.
     calculateImpoundFee = require 'server.default-calculate-impound-fee',
     logging = {
         webhook = {
@@ -44,6 +45,7 @@ return {
     ---@field shared? boolean defaults to false. Shared garages give all players with access to the garage access to all vehicles in it. If shared is off, the garage will only give access to player's vehicles which they own.
     ---@field states? VehicleState | VehicleState[] if set, only vehicles in the given states will be retrievable from the garage. Defaults to GARAGED.
     ---@field skipGarageCheck? boolean if true, returns vehicles for retrieval regardless of if that vehicle's garage matches this garage's name
+    ---@field slots? integer maximum stored vehicles. Defaults to Config.defaultGarageSlots; shared garages count globally.
     ---@field canAccess? fun(source: number): boolean checks access as an additional guard clause. Other filter fields still need to pass in addition to this function.
     ---@field accessPoints AccessPoint[]
 

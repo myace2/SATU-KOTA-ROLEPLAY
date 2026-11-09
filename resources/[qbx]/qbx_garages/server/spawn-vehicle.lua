@@ -1,6 +1,7 @@
 
 local logger = require '@qbx_core.modules.logger'
 local spawningVehicles = {}
+local spawningAccessPoints = {}
 
 ---@param player table
 ---@param garage GarageConfig
@@ -244,16 +245,14 @@ local function spawnVehicle(source, vehicleId, garageName, accessPointIndex)
         return
     end
 
-    -- CEK APAKAH KENDARAAN SUDAH ADA DI MAP
-    if garageType == GarageType.DEPOT
-        and FindPlateOnServer(playerVehicle.props.plate) then
-
+    -- ANTI-DUPLIKASI: kendaraan dengan plat ini tidak boleh di-spawn
+    -- kembali selama entity sebelumnya masih berada di dunia.
+    if FindPlateOnServer(playerVehicle.props.plate) then
         exports.qbx_core:Notify(
             source,
-            locale('error.not_impound'),
+            'Kendaraan ini sudah berada di dunia.',
             'error'
         )
-
         return
     end
 
@@ -463,11 +462,27 @@ lib.callback.register(
 
         if not vehicleId or vehicleId <= 0
             or vehicleId % 1 ~= 0
-            or spawningVehicles[vehicleId] then
+            or type(garageName) ~= 'string'
+            or not accessPointIndex
+            or accessPointIndex % 1 ~= 0 then
+            return
+        end
+
+        -- Kunci per kendaraan mencegah request ganda untuk ID yang sama.
+        -- Kunci per access point mencegah dua kendaraan berbeda muncul
+        -- bersamaan pada koordinat spawn yang sama.
+        local spawnPointKey = ('%s:%s'):format(garageName, accessPointIndex)
+        if spawningVehicles[vehicleId] or spawningAccessPoints[spawnPointKey] then
+            exports.qbx_core:Notify(
+                source,
+                'Titik spawn sedang digunakan. Coba beberapa saat lagi.',
+                'error'
+            )
             return
         end
 
         spawningVehicles[vehicleId] = true
+        spawningAccessPoints[spawnPointKey] = true
 
         local success, result = pcall(
             spawnVehicle,
@@ -478,6 +493,7 @@ lib.callback.register(
         )
 
         spawningVehicles[vehicleId] = nil
+        spawningAccessPoints[spawnPointKey] = nil
 
         if not success then
             lib.print.error(
