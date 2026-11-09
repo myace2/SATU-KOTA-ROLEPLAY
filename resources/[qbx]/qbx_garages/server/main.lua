@@ -25,6 +25,7 @@ Garages = Config.garages
 GaragesHooks = lib.load('@qbx_core.modules.hooks')
 local parkingAuthorizations = {}
 local parkingVehicles = {}
+local parkingSlotLocks = {}
 
 lib.callback.register('qbx_garages:server:getGarages', function()
     return Garages
@@ -172,6 +173,32 @@ end
 
 ---@param source number
 ---@param garageName string
+---@return boolean hasSpace, number usedSlots, number maxSlots
+local function hasGarageCapacity(source, garageName)
+    local garage = Garages[garageName]
+    local player = exports.qbx_core:GetPlayer(source)
+    if not garage or not player or garage.type == GarageType.DEPOT then
+        return false, 0, 0
+    end
+
+    local maxSlots = tonumber(garage.slots or Config.defaultGarageSlots)
+    if not maxSlots then
+        return true, 0, 0
+    end
+
+    maxSlots = math.floor(maxSlots)
+    if maxSlots < 0 then
+        return false, 0, maxSlots
+    end
+
+    local citizenid = garage.shared and nil or player.PlayerData.citizenid
+    local usedSlots = Storage.countGarageVehicles(garageName, citizenid)
+    return usedSlots < maxSlots, usedSlots, maxSlots
+end
+
+
+---@param source number
+---@param garageName string
 ---@return PlayerVehicle[]?
 lib.callback.register('qbx_garages:server:getGarageVehicles', function(source, garageName)
     local player = exports.qbx_core:GetPlayer(source)
@@ -221,7 +248,9 @@ local function isParkable(source, vehicleId, garageName)
             return false
         end
     end
-    return true
+
+    local hasSpace = hasGarageCapacity(source, garageName)
+    return hasSpace
 end
 
 ---@param source number
@@ -302,10 +331,29 @@ lib.callback.register('qbx_garages:server:parkVehicle', function(source, netId, 
     local garageConfig = type(garage) == 'string' and Garages[garage]
     if not garageConfig or not isNearGarageDropPoint(vehicle, garageConfig) or not areValidProperties(props, vehicle) then return false end
 
+    local player = exports.qbx_core:GetPlayer(source)
+    if not player then return false end
+
+    -- Reservasi slot per pemain dan garasi (atau global untuk shared garage).
+    -- Lock dipasang sebelum query database agar dua parkir bersamaan tidak
+    -- dapat memakai slot terakhir yang sama.
+    local slotLockKey = garageConfig.shared and garage or (garage .. ':' .. player.PlayerData.citizenid)
+    if parkingSlotLocks[slotLockKey] then
+        exports.qbx_core:Notify(source, 'Garasi sedang memproses kendaraan lain. Coba lagi.', 'error')
+        return false
+    end
+
+    parkingSlotLocks[slotLockKey] = true
     parkingVehicles[vehicle] = true
     local success, parked = pcall(function()
         local vehicleId = Entity(vehicle).state.vehicleid or exports.qbx_vehicles:GetVehicleIdByPlate(GetVehicleNumberPlateText(vehicle))
-        if not isParkable(source, vehicleId, garage) then return false end
+        if not isParkable(source, vehicleId, garage) then
+            local hasSpace, usedSlots, maxSlots = hasGarageCapacity(source, garage)
+            if not hasSpace then
+                exports.qbx_core:Notify(source, ('Slot garasi penuh (%d/%d).'):format(usedSlots, maxSlots), 'error')
+            end
+            return false
+        end
         if not GaragesHooks('parkVehicle', {source = source, vehicleId = vehicleId, vehicle = vehicle, garageName = garage}) then return false end
 
         local saved = exports.qbx_vehicles:SaveVehicle(vehicle, {
@@ -319,6 +367,7 @@ lib.callback.register('qbx_garages:server:parkVehicle', function(source, netId, 
         return true
     end)
     parkingVehicles[vehicle] = nil
+    parkingSlotLocks[slotLockKey] = nil
     if not success then lib.print.error(parked) end
     return success and parked == true
 end)
