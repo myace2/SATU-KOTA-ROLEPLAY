@@ -30,7 +30,7 @@ lib.addCommand('givecar', {
     local vehicleId, err = exports.qbx_vehicles:CreatePlayerVehicle({
         model = model,
         citizenid = target.PlayerData.citizenid,
-        garage = 'motelgarage',
+        garage = 'garasikota',
     })
 
     if not vehicleId then
@@ -38,5 +38,5 @@ lib.addCommand('givecar', {
     end
 
     notify(source, ('Kendaraan %s berhasil diberikan kepada ID %s.'):format(model, targetId), 'success')
-    notify(targetId, ('Kendaraan %s sudah tersedia di Motel Parking.'):format(model), 'success')
+    notify(targetId, ('Kendaraan %s sudah tersedia di Garasi Kota.'):format(model), 'success')
 end)    
