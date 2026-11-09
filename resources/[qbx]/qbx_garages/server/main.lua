@@ -191,7 +191,10 @@ local function hasGarageCapacity(source, garageName)
         return false, 0, maxSlots
     end
 
-    local citizenid = garage.shared and nil or player.PlayerData.citizenid
+    local citizenid
+    if not garage.shared then
+        citizenid = player.PlayerData.citizenid
+    end
     local usedSlots = Storage.countGarageVehicles(garageName, citizenid)
     return usedSlots < maxSlots, usedSlots, maxSlots
 end
